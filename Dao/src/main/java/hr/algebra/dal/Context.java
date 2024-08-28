@@ -8,6 +8,7 @@ import hr.algebra.model.Conservation;
 import hr.algebra.model.Family;
 import hr.algebra.model.Light;
 import hr.algebra.model.Plant;
+import hr.algebra.model.User;
 import hr.algebra.model.Zone;
 
 /**
@@ -21,15 +22,16 @@ public abstract class Context {
     public final Repository<Conservation> conservations;
     public final Repository<Zone> zones;
     public final Repository<Light> lights;
+    public final Repository<User> users;
 
-    public Context(Repository<Plant> plants, Repository<Family> families, Repository<Conservation> conservations, Repository<Zone> zones, Repository<Light> lights) {
+    public Context(Repository<Plant> plants, Repository<Family> families, Repository<Conservation> conservations, 
+            Repository<Zone> zones, Repository<Light> lights, Repository<User> users) {
         this.plants = plants;
         this.families = families;
         this.conservations = conservations;
         this.zones = zones;
         this.lights = lights;
+        this.users = users;
     }
-    
-    
 
 }

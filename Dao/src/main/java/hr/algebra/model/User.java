@@ -20,6 +20,13 @@ public class User implements Comparable<User>{
         this.admin = false;
     }
 
+    public User(int id, String username, String password, boolean admin) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.admin = admin;
+    }
+    
     public int getId() {
         return id;
     }

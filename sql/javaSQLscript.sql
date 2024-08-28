@@ -55,6 +55,7 @@ CREATE TABLE Plant (
     [Availability] INT NOT NULL
 )
 go
+
 --- PLANT TABLE DATA
 CREATE OR ALTER PROC CreatePlant
     @Common NVARCHAR(100),
@@ -137,38 +138,46 @@ INNER JOIN Light ON pl.LightID = Light.ID
 END
 
 CREATE OR ALTER PROCEDURE CreateFamily
-    @FamilyName NVARCHAR(100)
+    @FamilyName NVARCHAR(100),
+    @ID INT OUTPUT
 AS
 BEGIN
         INSERT INTO [Family] (FamilyName)
         VALUES (@FamilyName)
-    END
+        set @ID = SCOPE_IDENTITY() 
+END
 go
 ---------------------
 CREATE OR ALTER PROCEDURE CreateConservation
-    @ConservationName NVARCHAR(5)
+    @ConservationName NVARCHAR(5),
+    @ID INT OUTPUT
 AS
 BEGIN
         INSERT INTO Conservation (ConservationName)
         VALUES (@ConservationName)
+set @ID = SCOPE_IDENTITY() 
     END
 go
 
 CREATE OR ALTER PROCEDURE CreateZone
-    @ZoneName NVARCHAR(5)
+    @ZoneName NVARCHAR(5),
+    @ID INT OUTPUT
 AS
 BEGIN
         INSERT INTO [Zone] (ZoneName)
         VALUES (@ZoneName)
+set @ID = SCOPE_IDENTITY() 
     END
 go
 
 CREATE OR ALTER PROCEDURE CreateLight
-    @LightName NVARCHAR(100)
+    @LightName NVARCHAR(100),
+    @ID INT OUTPUT
 AS
 BEGIN
         INSERT INTO Light (LightName)
         VALUES (@LightName)
+set @ID = SCOPE_IDENTITY() 
     END
 go
 
@@ -330,27 +339,17 @@ GO
 
 -- user stuff
 
-CREATE OR ALTER PROC CreateAdmin
-    @Username NVARCHAR(50),
-    @Password NVARCHAR(50)
-AS
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM [User] WHERE Username = @Username OR Admin = 1)
-    BEGIN
-        INSERT INTO [User] (Username, Password, Admin)
-        VALUES (@Username, @Password, 1)
-    END
-END
-go
-
 CREATE OR ALTER PROC CreateUser
     @Username NVARCHAR(50),
-    @Password NVARCHAR(50)
+    @Password NVARCHAR(50),
+    @Admin bit,
+    @ID INT OUTPUT
 AS
 BEGIN
         INSERT INTO [User] (Username, Password, Admin)
-        VALUES (@Username, @Password, 0)
-    END
+        VALUES (@Username, @Password, @Admin)
+        set @ID = SCOPE_IDENTITY() 
+END
 go
 
 CREATE OR ALTER PROC GetUser
@@ -396,7 +395,9 @@ END
 
 
 --- TEST DATA BEGIN
-exec CreateAdmin @Username = 'admin', @Password = 'password'
+declare @adminID int
+
+exec CreateUser @Username = 'admin', @Password = 'password' @Admin = 1, @ID =  @adminID OUTPUT
 EXEC CreateFamily @FamilyName = 'Acanthaceae'
 EXEC CreateFamily @FamilyName = 'Nyctaginaceae'
 EXEC CreateConservation @ConservationName = 'LC'
@@ -404,7 +405,7 @@ EXEC CreateZone @ZoneName = '10'
 EXEC CreateLight @LightName = 'Full Sun'
 
 
-declare @biljkicaID int 
+declare @biljkicaID int
 
 EXEC CreatePlant @Common = 'Firecracker Plant',
 @Botanical = 'Russelia equisetiformis',
@@ -429,10 +430,13 @@ EXEC CreatePlant @Common = 'Bougainvillea',
 @ZoneID = 2,
 @LightID = 2,
 @Price = 14.99,
-@Availability = 5
+@Availability = 5, 
+@ID = @biljkicaID OUTPUT 
 
-EXEC CreateUser @Username = 'user1', @Password = 'password1' 
-EXEC CreateUser @Username = 'user2', @Password = 'password2'
+
+declare @korisnikID int
+EXEC CreateUser @Username = 'user12', @Password = 'password1', @Admin = 0, @ID =  @korisnikID OUTPUT
+EXEC CreateUser @Username = 'user21', @Password = 'password2', @Admin = 0, @ID =  @korisnikID OUTPUT
 
 exec GetAllPlants
 --- TEST DATA END
