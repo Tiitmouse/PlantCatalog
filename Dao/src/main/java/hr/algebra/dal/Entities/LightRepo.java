@@ -10,6 +10,7 @@ import hr.algebra.model.Light;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +37,8 @@ public class LightRepo implements Repository<Light> {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_LIGHT)) {
 
-            stmt.setInt(ID_LIGHT, item.getId());
             stmt.setString(LIGHTNAME, item.getLightName());
+            stmt.registerOutParameter(ID_LIGHT, Types.INTEGER);
 
             stmt.executeUpdate();
             return stmt.getInt(ID_LIGHT);

@@ -1,5 +1,6 @@
 package hr.algebra.parsers.rss;
 
+import hr.algebra.dal.ContextFactory;
 import hr.algebra.factory.ParserFactory;
 import hr.algebra.factory.UrlConnectionFactory;
 import hr.algebra.model.Conservation;
@@ -38,8 +39,9 @@ public class PlantParser {
     private static final String EXT = ".jpg";
     private static final String DIR = "assets";
 
-    public static List<Plant> parse() throws IOException, XMLStreamException {
+    public static void parse() throws IOException, XMLStreamException, Exception {
         List<Plant> plants = new ArrayList<>();
+        var context = ContextFactory.getContext();
         HttpURLConnection con = UrlConnectionFactory.getHttpUrlConnection(RSS_URL);
         try (InputStream is = con.getInputStream()) { // stream will close the connection
             XMLEventReader reader = ParserFactory.createStaxParser(is);
@@ -77,12 +79,18 @@ public class PlantParser {
                                 }
                                 case FAMILY -> {
                                     if (!data.isEmpty()) {
-                                        plant.setFamily(new Family(data));
+                                        try {
+                                            var id = context.families.create(new Family(data));
+                                        plant.setFamily(new Family(id, data));
+                                        } catch (Exception e) {
+                                            System.out.println(e);
+                                        }
                                     }
                                 }
                                 case CONSERVATION -> {
                                     if (!data.isEmpty()) {
-                                        plant.setConservation_status(new Conservation(data));
+                                        var id = context.conservations.create(new Conservation(data));
+                                        plant.setConservation_status(new Conservation(id, data));
                                     }
                                 }
                                 case DESCRIPTION -> {
@@ -92,25 +100,26 @@ public class PlantParser {
                                 }                                
                                 case PICTURE -> {
                                     if (startElement != null && plant.getPicture_path()== null) {
-                                        Attribute urlAttribute = startElement.getAttributeByName(new QName(ATTRIBUTE_URL));
-                                        if (urlAttribute != null) {
-                                            handlePicture(plant, urlAttribute.getValue());
+                                        if (data != null) {
+                                            handlePicture(plant, data);
                                         }
                                     }
                                 }
                                 case LIGHT -> {
                                     if (!data.isEmpty()) {
-                                        plant.setLight(new Light(data));
+                                        var id = context.lights.create(new Light(data));
+                                        plant.setLight(new Light(id, data));
                                     }
                                 }
                                 case ZONE -> {
                                     if (!data.isEmpty()) {
-                                        plant.setZone(new Zone(data));
+                                        var id = context.zones.create(new Zone(data));
+                                        plant.setZone(new Zone(id, data));
                                     }
                                 }
                                 case PRICE -> {
                                     if (!data.isEmpty()) {
-                                        plant.setPrice(Double.parseDouble(data));
+                                        plant.setPrice(Double.parseDouble(data.substring(1)));
                                     }
                                 }
                                 case AVAILABILITY -> {
@@ -125,13 +134,18 @@ public class PlantParser {
             }
 
         }
-        return plants;
-
+            context.plants.createMany(plants);
     }
 
     private static void handlePicture(Plant plant, String pictureUrl) {
         // if picture is not ok, we must continue!!!
         try {
+            if(pictureUrl.isBlank()) {
+                //TODO set to no picture
+                //California Poppy
+                plant.setPicture_path("assets/noPicture.jpg");
+                return;
+            }
             String ext = pictureUrl.substring(pictureUrl.lastIndexOf("."));
             if (ext.length() > 4) {
                 ext = EXT;
@@ -142,7 +156,7 @@ public class PlantParser {
             FileUtils.copyFromUrl(pictureUrl, localPicturePath);
             // put breakpoint
             plant.setPicture_path(localPicturePath);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PlantParser.class.getName()).log(Level.SEVERE, null, ex);
         }
 

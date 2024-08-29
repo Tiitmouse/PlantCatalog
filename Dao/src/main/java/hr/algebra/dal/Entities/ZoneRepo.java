@@ -10,6 +10,7 @@ import hr.algebra.model.Zone;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +37,8 @@ public class ZoneRepo implements Repository<Zone> {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_ZONE)) {
 
-            stmt.setInt(ID_ZONE, item.getId());
             stmt.setString(ZONENAME, item.getZoneName());
+            stmt.registerOutParameter(ID_ZONE, Types.INTEGER);
 
             stmt.executeUpdate();
             return stmt.getInt(ID_ZONE);

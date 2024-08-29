@@ -31,7 +31,7 @@ public final class ContextFactory {
         }
     }
 
-    public static Context getRepository() {
+    public static Context getContext() {
         return context;
     }
 

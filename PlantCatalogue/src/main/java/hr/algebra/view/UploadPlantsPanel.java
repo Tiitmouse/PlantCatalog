@@ -88,12 +88,14 @@ public class UploadPlantsPanel extends javax.swing.JPanel {
 
     private void btnUploadPlantsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadPlantsActionPerformed
         try {
-            List<Plant> plants = PlantParser.parse();
+            PlantParser.parse();
             //repository.createPlants(plants);
             loadModel();
 
         } catch (Exception ex) {
             MessageUtils.showErrorMessage("Unrecoverable error", "Unable to upload plants");
+            //TODO nemoj console logati
+            System.out.println(ex);
             System.exit(1);
         }
     }//GEN-LAST:event_btnUploadPlantsActionPerformed

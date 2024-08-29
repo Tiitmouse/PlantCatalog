@@ -1,4 +1,3 @@
-
 package hr.algebra.dal.Entities;
 
 import hr.algebra.dal.Repository;
@@ -41,7 +40,7 @@ public class PlantRepo implements Repository<Plant> {
     private static final String DELETE_ALL_PLANTS = "{ CALL DeleteAllPlants (?) }";
     private static final String GET_PLANT = "{ CALL GetPlant (?) }";
     private static final String GET_ALL_PLANTS = "{ CALL GetAllPlants }";
-    
+
     private static final String FAMILYNAME = "FamilyName";
     private static final String CONSERVATIONNAME = "ConservationName";
     private static final String ZONENAME = "ZoneName";
@@ -49,7 +48,7 @@ public class PlantRepo implements Repository<Plant> {
 
     @Override
     public int create(Plant item) throws Exception {
-       DataSource dataSource = DataSourceSingleton.getInstance();
+        DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_PLANT)) {
 
             stmt.setString(COMMON, item.getCommon_name());
@@ -62,12 +61,12 @@ public class PlantRepo implements Repository<Plant> {
             stmt.setInt(LIGHTID, item.getLight().getId());
             stmt.setDouble(PRICE, item.getPrice());
             stmt.setInt(AVAILABILITY, item.getAvailability());
-            stmt.registerOutParameter(ID_PLANT,Types.INTEGER);
-            
-            
+            stmt.registerOutParameter(ID_PLANT, Types.INTEGER);
+
             stmt.executeUpdate();
             return stmt.getInt(ID_PLANT);
-        }    }
+        }
+    }
 
     @Override
     public void createMany(List<Plant> items) throws Exception {
@@ -85,10 +84,12 @@ public class PlantRepo implements Repository<Plant> {
                 stmt.setInt(LIGHTID, plant.getLight().getId());
                 stmt.setDouble(PRICE, plant.getPrice());
                 stmt.setInt(AVAILABILITY, plant.getAvailability());
+                stmt.registerOutParameter(ID_PLANT, Types.INTEGER);
 
                 stmt.executeUpdate();
             }
-        }    }
+        }
+    }
 
     @Override
     public void update(int id, Plant item) throws Exception {
@@ -108,7 +109,8 @@ public class PlantRepo implements Repository<Plant> {
             stmt.setInt(AVAILABILITY, item.getAvailability());
 
             stmt.executeUpdate();
-        }    }
+        }
+    }
 
     @Override
     public void delete(int id) throws Exception {
@@ -118,14 +120,16 @@ public class PlantRepo implements Repository<Plant> {
             stmt.setInt(ID_PLANT, id);
 
             stmt.executeUpdate();
-        }    }
+        }
+    }
 
     @Override
     public void deleteAll(int id) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETE_ALL_PLANTS)) {
             stmt.execute();
-        }    }
+        }
+    }
 
     @Override
     public Optional<Plant> select(int id) throws Exception {
@@ -147,7 +151,7 @@ public class PlantRepo implements Repository<Plant> {
                             rs.getString(DESCRIPTION),
                             rs.getString(PICTURE),
                             new Zone(rs.getInt(ZONEID), rs.getString(ZONENAME)),
-                            new Light(rs.getInt(LIGHTID), rs.getString(LIGHTNAME)),                            
+                            new Light(rs.getInt(LIGHTID), rs.getString(LIGHTNAME)),
                             rs.getDouble(PRICE),
                             rs.getInt(AVAILABILITY));
                 }
@@ -158,32 +162,32 @@ public class PlantRepo implements Repository<Plant> {
             return Optional.empty();
         }
 
-        return Optional.of(plant);    }
+        return Optional.of(plant);
+    }
 
     @Override
     public List<Plant> selectAll() throws Exception {
         List<Plant> plants = new ArrayList<>();
         DataSource dataSource = DataSourceSingleton.getInstance();
-        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(GET_ALL_PLANTS); )
-        { 
+        try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(GET_ALL_PLANTS);) {
             ResultSet rs = stmt.executeQuery();
-    
 
             while (rs.next()) {
                 plants.add(new Plant(
-                            rs.getInt(ID_PLANT),
-                            rs.getString(COMMON),
-                            rs.getString(BOTANICAL),
-                            new Family(rs.getInt(FAMILYID), rs.getString(FAMILYNAME)),
-                            new Conservation(rs.getInt(CONSERVATIONID), rs.getString(CONSERVATIONNAME)),
-                            rs.getString(DESCRIPTION),
-                            rs.getString(PICTURE),
-                            new Zone(rs.getInt(ZONEID), rs.getString(ZONENAME)),
-                            new Light(rs.getInt(LIGHTID), rs.getString(LIGHTNAME)),                            
-                            rs.getDouble(PRICE),
-                            rs.getInt(AVAILABILITY)));
+                        rs.getInt(ID_PLANT),
+                        rs.getString(COMMON),
+                        rs.getString(BOTANICAL),
+                        new Family(rs.getInt(FAMILYID), rs.getString(FAMILYNAME)),
+                        new Conservation(rs.getInt(CONSERVATIONID), rs.getString(CONSERVATIONNAME)),
+                        rs.getString(DESCRIPTION),
+                        rs.getString(PICTURE),
+                        new Zone(rs.getInt(ZONEID), rs.getString(ZONENAME)),
+                        new Light(rs.getInt(LIGHTID), rs.getString(LIGHTNAME)),
+                        rs.getDouble(PRICE),
+                        rs.getInt(AVAILABILITY)));
             }
         }
-        return plants;    }
+        return plants;
+    }
 
 }

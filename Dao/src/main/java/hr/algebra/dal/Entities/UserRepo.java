@@ -10,6 +10,7 @@ import hr.algebra.model.User;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,10 +41,10 @@ public class UserRepo implements Repository<User>{
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_USER)) {
 
-            stmt.setInt(ID_USER, item.getId());
             stmt.setString(USERNAME, item.getUsername());
             stmt.setString(PASSWORD, item.getPassword());
             stmt.setBoolean(ADMIN, item.isAdmin());
+            stmt.registerOutParameter(ID_USER, Types.INTEGER);
 
 
             stmt.executeUpdate();

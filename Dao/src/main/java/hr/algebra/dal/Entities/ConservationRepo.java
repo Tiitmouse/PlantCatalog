@@ -10,6 +10,7 @@ import hr.algebra.model.Conservation;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +37,8 @@ public class ConservationRepo implements Repository<Conservation> {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_CONSERVATION)) {
 
-            stmt.setInt(ID_CONSERVATION, item.getId());
             stmt.setString(CONSERVATIONNAME, item.getConservationName());
+            stmt.registerOutParameter(ID_CONSERVATION, Types.INTEGER);
 
             stmt.executeUpdate();
             return stmt.getInt(ID_CONSERVATION);

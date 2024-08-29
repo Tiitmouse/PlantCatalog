@@ -155,8 +155,8 @@ AS
 BEGIN
         INSERT INTO Conservation (ConservationName)
         VALUES (@ConservationName)
-set @ID = SCOPE_IDENTITY() 
-    END
+        set @ID = SCOPE_IDENTITY() 
+END
 go
 
 CREATE OR ALTER PROCEDURE CreateZone

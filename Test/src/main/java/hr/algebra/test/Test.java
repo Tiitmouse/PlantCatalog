@@ -17,7 +17,7 @@ public class Test {
 
     public static void main(String[] args) {
 
-        var repo = ContextFactory.getRepository();
+        var repo = ContextFactory.getContext();
 
         try {
             List<Family> families = repo.families.selectAll();

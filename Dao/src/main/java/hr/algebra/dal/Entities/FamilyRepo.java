@@ -10,6 +10,8 @@ import hr.algebra.model.Family;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLType;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +38,8 @@ public class FamilyRepo implements Repository<Family> {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_FAMILY)) {
 
-            stmt.setInt(ID_FAMILY, item.getId());
             stmt.setString(FAMILYNAME, item.getFamilyName());
+            stmt.registerOutParameter(ID_FAMILY, Types.INTEGER);
 
             stmt.executeUpdate();
             return stmt.getInt(ID_FAMILY);
