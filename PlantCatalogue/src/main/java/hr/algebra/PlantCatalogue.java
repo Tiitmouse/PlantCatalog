@@ -1,6 +1,8 @@
 
 package hr.algebra;
-import hr.algebra.view.UploadPlantsPanel;
+import hr.algebra.view.AdminControlPanel;
+import hr.algebra.view.CRUDPlantPanel;
+import hr.algebra.view.EditSuperPanel;
 
 
 /**
@@ -84,8 +86,11 @@ public class PlantCatalogue extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tpContent;
     // End of variables declaration//GEN-END:variables
     private void configurePanels() {
-//        tpContent.add(UPLOAD_ARTICLES, new UploadPlantsPanel());
+//        tpContent.add(UPLOAD_ARTICLES, new AdminControlPanel());
 //        tpContent.add(EDIT_ARTICLES, new EditPlantsPanel());
-    tpContent.add("Plant", new UploadPlantsPanel());
+    tpContent.add("Controls", new AdminControlPanel());
+    tpContent.add("Plant editing", new CRUDPlantPanel());
+    tpContent.add("Super editing", new EditSuperPanel());
+
     }
 }

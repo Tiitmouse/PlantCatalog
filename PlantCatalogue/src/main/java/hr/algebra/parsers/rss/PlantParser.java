@@ -81,7 +81,7 @@ public class PlantParser {
                                     if (!data.isEmpty()) {
                                         try {
                                             var id = context.families.create(new Family(data));
-                                        plant.setFamily(new Family(id, data));
+                                            plant.setFamily(new Family(id, data));
                                         } catch (Exception e) {
                                             System.out.println(e);
                                         }
@@ -97,9 +97,9 @@ public class PlantParser {
                                     if (!data.isEmpty()) {
                                         plant.setDescription(data);
                                     }
-                                }                                
+                                }
                                 case PICTURE -> {
-                                    if (startElement != null && plant.getPicture_path()== null) {
+                                    if (startElement != null && plant.getPicture_path() == null) {
                                         if (data != null) {
                                             handlePicture(plant, data);
                                         }
@@ -134,13 +134,13 @@ public class PlantParser {
             }
 
         }
-            context.plants.createMany(plants);
+        context.plants.createMany(plants);
     }
 
     private static void handlePicture(Plant plant, String pictureUrl) {
         // if picture is not ok, we must continue!!!
         try {
-            if(pictureUrl.isBlank()) {
+            if (pictureUrl.isBlank()) {
                 //TODO set to no picture
                 //California Poppy
                 plant.setPicture_path("assets/noPicture.jpg");
@@ -193,4 +193,3 @@ public class PlantParser {
     }
 
 }
-
