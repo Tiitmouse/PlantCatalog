@@ -4,15 +4,19 @@
  */
 package hr.algebra.view;
 
+import hr.algebra.dal.Context;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.ContextFactory;
 import hr.algebra.model.Plant;
 import hr.algebra.parsers.rss.PlantParser;
 import hr.algebra.utilities.MessageUtils;
+import hr.algebra.view.model.PlantsTableModel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
+import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -20,10 +24,16 @@ import javax.swing.DefaultListModel;
  */
 public class AdminControlPanel extends javax.swing.JPanel {
 
+    private final Context context;
+
+    private PlantsTableModel plantsTableModel;
+    private int selectedPlantId;
+
     /**
      * Creates new form UploadPlantsPanel
      */
     public AdminControlPanel() {
+        context = ContextFactory.getContext();
         initComponents();
 
     }
@@ -39,7 +49,7 @@ public class AdminControlPanel extends javax.swing.JPanel {
 
         btnUploadPlantsToDatabase = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblChosenPlant = new javax.swing.JTable();
+        tblPlants = new javax.swing.JTable();
         btnDeleteSelected = new javax.swing.JButton();
         btnDeleteAllPlants = new javax.swing.JButton();
 
@@ -58,9 +68,9 @@ public class AdminControlPanel extends javax.swing.JPanel {
             }
         });
 
-        tblChosenPlant.setBackground(new java.awt.Color(255, 255, 255));
-        tblChosenPlant.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 5, true));
-        tblChosenPlant.setModel(new javax.swing.table.DefaultTableModel(
+        tblPlants.setBackground(new java.awt.Color(255, 255, 255));
+        tblPlants.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(137, 151, 116), 0));
+        tblPlants.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -71,7 +81,17 @@ public class AdminControlPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tblChosenPlant);
+        tblPlants.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPlantsMouseClicked(evt);
+            }
+        });
+        tblPlants.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tblPlantsKeyPressed(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblPlants);
 
         btnDeleteSelected.setBackground(new java.awt.Color(255, 204, 204));
         btnDeleteSelected.setForeground(new java.awt.Color(0, 0, 0));
@@ -96,7 +116,7 @@ public class AdminControlPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(81, Short.MAX_VALUE)
+                .addContainerGap(146, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnUploadPlantsToDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -105,46 +125,98 @@ public class AdminControlPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(btnDeleteAllPlants, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(60, Short.MAX_VALUE)
+                .addContainerGap(79, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUploadPlantsToDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDeleteSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDeleteAllPlants, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUploadPlantsToDatabaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadPlantsToDatabaseActionPerformed
         try {
             PlantParser.parse();
-            //repository.createPlants(plants);
             loadModel();
-
+            MessageUtils.showInformationMessage("success", "good for u");
         } catch (Exception ex) {
             MessageUtils.showErrorMessage("Unrecoverable error", "Unable to upload plants");
             //TODO nemoj console logati
             System.out.println(ex);
-            System.exit(1);
         }
+
     }//GEN-LAST:event_btnUploadPlantsToDatabaseActionPerformed
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         init();    }//GEN-LAST:event_formComponentShown
 
     private void btnDeleteSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteSelectedActionPerformed
-        // TODO add your handling code here:
+
+        try {
+            var pl = context.plants.select(selectedPlantId);
+            if (pl.isEmpty()) {
+                MessageUtils.showInformationMessage("nope", "Plant not selected");
+                return;
+            }
+            if (MessageUtils.showConfirmDialog(
+                    "Delete plant",
+                    "u sure?")) {
+                try {
+                    // todo should delete its downloaded picture
+                    if (pl.get().getPicture_path() != null) {
+                        Files.deleteIfExists(Paths.get(pl.get().getPicture_path()));
+                    }
+                    context.plants.delete(selectedPlantId);
+                    plantsTableModel.setPlants(context.plants.selectAll());
+                    
+                } catch (Exception ex) {
+                    Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to delete plant!");
+                } finally {
+                    loadModel();
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnDeleteSelectedActionPerformed
 
     private void btnDeleteAllPlantsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllPlantsActionPerformed
-        // TODO add your handling code here:
+        if (MessageUtils.showConfirmDialog(
+                "Delete all plants",
+                "u sure?")) {
+            try {
+                 //todo should delete its downloaded picture
+                 //if (selectedPlant.getPicture_path()!= null) {
+                 //    Files.deleteIfExists(Paths.get(selectedPlant.getPicture_path()));
+                 // }
+                context.plants.deleteAll();
+
+            } catch (Exception ex) {
+                Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                MessageUtils.showErrorMessage("Error", "Unable to delete all plants!");
+            } finally {
+                loadModel();
+            }
+        }
     }//GEN-LAST:event_btnDeleteAllPlantsActionPerformed
+
+    private void tblPlantsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPlantsMouseClicked
+        int selectedRow = tblPlants.getSelectedRow();
+        int rowIndex = tblPlants.convertRowIndexToModel(selectedRow);
+        selectedPlantId = (int) plantsTableModel.getValueAt(rowIndex, 0);
+    }//GEN-LAST:event_tblPlantsMouseClicked
+
+    private void tblPlantsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblPlantsKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblPlantsKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -152,16 +224,15 @@ public class AdminControlPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnDeleteSelected;
     private javax.swing.JButton btnUploadPlantsToDatabase;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tblChosenPlant;
+    private javax.swing.JTable tblPlants;
     // End of variables declaration//GEN-END:variables
-    private DefaultListModel<Plant> plantsModel;
     private Repository repository;
 
     private void init() {
         try {
-            //repository = ContextFactory.getRepository();
-            plantsModel = new DefaultListModel<>();
             loadModel();
+            initTable();
+
         } catch (Exception ex) {
             Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
             MessageUtils.showErrorMessage("Unrecoverable error", "Cannot initiate the form");
@@ -169,9 +240,23 @@ public class AdminControlPanel extends javax.swing.JPanel {
         }
     }
 
-    private void loadModel() throws Exception {
-        //List<Plant> plants = repository.getAllPlants();
-        plantsModel.clear();
-        //plants.forEach(plantsModel::addElement);
+    private void loadModel() {
+        List<Plant> plants;
+        try {
+            plants = context.plants.selectAll();
+            plantsTableModel = new PlantsTableModel(plants);
+            tblPlants.setModel(plantsTableModel);
+        } catch (Exception ex) {
+            Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+
+    private void initTable() throws Exception {
+        tblPlants.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblPlants.setAutoCreateRowSorter(true);
+        tblPlants.setRowHeight(25);
+        plantsTableModel = new PlantsTableModel(context.plants.selectAll());
+        tblPlants.setModel(plantsTableModel);
+    }
+
 }

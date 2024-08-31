@@ -35,7 +35,7 @@ public class UserPanel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        tfUsernameInput.setBackground(new java.awt.Color(137, 151, 116));
+        tfUsernameInput.setBackground(new java.awt.Color(157, 168, 141));
         tfUsernameInput.setText("Username");
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -46,7 +46,7 @@ public class UserPanel extends javax.swing.JPanel {
         jLabel2.setForeground(new java.awt.Color(137, 151, 116));
         jLabel2.setText("Edit");
 
-        tfPasswordInput.setBackground(new java.awt.Color(137, 151, 116));
+        tfPasswordInput.setBackground(new java.awt.Color(157, 168, 141));
         tfPasswordInput.setText("Password");
 
         btnSaveUserEdit.setText("Save");

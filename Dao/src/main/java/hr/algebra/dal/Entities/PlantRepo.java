@@ -37,7 +37,7 @@ public class PlantRepo implements Repository<Plant> {
     private static final String CREATE_PLANT = "{ CALL CreatePlant (?,?,?,?,?,?,?,?,?,?,?) }";
     private static final String UPDATE_PLANT = "{ CALL UpdatePlant (?,?,?,?,?,?,?,?,?,?,?) }";
     private static final String DELETE_PLANT = "{ CALL DeletePlant (?) }";
-    private static final String DELETE_ALL_PLANTS = "{ CALL DeleteAllPlants (?) }";
+    private static final String DELETE_ALL_PLANTS = "{ CALL DeleteAllPlants }";
     private static final String GET_PLANT = "{ CALL GetPlant (?) }";
     private static final String GET_ALL_PLANTS = "{ CALL GetAllPlants }";
 
@@ -124,7 +124,7 @@ public class PlantRepo implements Repository<Plant> {
     }
 
     @Override
-    public void deleteAll(int id) throws Exception {
+    public void deleteAll() throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETE_ALL_PLANTS)) {
             stmt.execute();

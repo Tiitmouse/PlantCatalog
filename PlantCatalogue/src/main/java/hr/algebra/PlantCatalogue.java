@@ -1,17 +1,18 @@
-
 package hr.algebra;
+
+import hr.algebra.model.User;
 import hr.algebra.view.AdminControlPanel;
 import hr.algebra.view.CRUDPlantPanel;
 import hr.algebra.view.EditSuperPanel;
-
+import hr.algebra.view.UserLoginPanel;
+import hr.algebra.view.UserPanel;
 
 /**
  *
  * @author lorena
  */
 public class PlantCatalogue extends javax.swing.JFrame {
-    private static final String UPLOAD_PLANTS = "Upload plants";
-    private static final String EDIT_PLANTS = "Edit plants";
+
     /**
      * Creates new form PlantCatalogue
      */
@@ -37,11 +38,11 @@ public class PlantCatalogue extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
+            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 974, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
         );
 
         pack();
@@ -86,11 +87,11 @@ public class PlantCatalogue extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tpContent;
     // End of variables declaration//GEN-END:variables
     private void configurePanels() {
-//        tpContent.add(UPLOAD_ARTICLES, new AdminControlPanel());
-//        tpContent.add(EDIT_ARTICLES, new EditPlantsPanel());
-    tpContent.add("Controls", new AdminControlPanel());
-    tpContent.add("Plant editing", new CRUDPlantPanel());
-    tpContent.add("Super editing", new EditSuperPanel());
+       // tpContent.add("Login", new UserLoginPanel());
+        tpContent.add("Controls", new AdminControlPanel());
+        tpContent.add("Plant editing", new CRUDPlantPanel());
+        tpContent.add("Super editing", new EditSuperPanel());
+        tpContent.add("User", new UserPanel());
 
     }
 }

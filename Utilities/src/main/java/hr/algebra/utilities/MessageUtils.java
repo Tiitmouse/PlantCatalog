@@ -17,7 +17,7 @@ public class MessageUtils {
     }
     
     public static void showInformationMessage(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
     }
     
     public static void showErrorMessage(String title, String message) {

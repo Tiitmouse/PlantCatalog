@@ -71,7 +71,7 @@ public class ZoneRepo implements Repository<Zone> {
         }        }
 
     @Override
-    public void deleteAll(int id) throws Exception {
+    public void deleteAll() throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(DELETE_ALL_ZONES)) {
             stmt.execute();

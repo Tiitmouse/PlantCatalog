@@ -31,7 +31,7 @@ go
 
 CREATE TABLE [Zone] (
     ID int primary key not null IDENTITY(1, 1),
-    ZoneName NVARCHAR(5) NOT NULL
+    ZoneName NVARCHAR(20) NOT NULL
 ) 
 go
 
@@ -45,7 +45,7 @@ CREATE TABLE Plant (
     ID INT PRIMARY KEY NOT NULL IDENTITY(1, 1),
     Common NVARCHAR(100) NOT NULL,
     Botanical NVARCHAR(100) NOT NULL,
-    FamilyID int not null foreign key references Family (ID),
+    FamilyID int not null foreign key references Family (ID) on delete cascade,
     ConservationID int not null foreign key references Conservation (ID),
     [Description] NVARCHAR(max) NOT NULL,
     Picture NVARCHAR(200) NOT NULL,
@@ -392,61 +392,68 @@ BEGIN
     WHERE Admin <> 1
 END
 
+--- Admin stuff
+declare @adminID int
+exec CreateUser @Username = 'admin', @Password = 'password' @Admin = 1, @ID =  @adminID OUTPUT
+--- Admin stuff
 
 
 --- TEST DATA BEGIN
-declare @adminID int
-
-exec CreateUser @Username = 'admin', @Password = 'password' @Admin = 1, @ID =  @adminID OUTPUT
-EXEC CreateFamily @FamilyName = 'Acanthaceae'
-EXEC CreateFamily @FamilyName = 'Nyctaginaceae'
-EXEC CreateConservation @ConservationName = 'LC'
-EXEC CreateZone @ZoneName = '10'
-EXEC CreateLight @LightName = 'Full Sun'
 
 
-declare @biljkicaID int
-
-EXEC CreatePlant @Common = 'Firecracker Plant',
-@Botanical = 'Russelia equisetiformis',
-@FamilyID = 8,
-@ConservationID = 2,
-@Description = 'Firecracker Plant is a fast-growing, evergreen shrub that produces tubular, red flowers throughout the year. It is a great plant for attracting hummingbirds to the garden.',
-@Picture = 'https://www.gardeningknowhow.com/wp-content/uploads/2019/07/firecracker-plant.jpg',
-@ZoneID = 2,
-@LightID = 2,
-@Price = 9.99,
-@Availability = 10,
-@ID = @biljkicaID OUTPUT 
-
-select @biljkicaID
-
-EXEC CreatePlant @Common = 'Bougainvillea',
-@Botanical = 'Bougainvillea spectabilis',
-@FamilyID = 9,
-@ConservationID = 2,
-@Description = 'Bougainvillea is a tropical vine that can grow up to 30 feet tall. It produces colorful bracts in shades of pink, red, purple, and white.',
-@Picture = 'https://www.gardeningknowhow.com/wp-content/uploads/2019/07/bougainvillea.jpg',
-@ZoneID = 2,
-@LightID = 2,
-@Price = 14.99,
-@Availability = 5, 
-@ID = @biljkicaID OUTPUT 
+-- EXEC CreateFamily @FamilyName = 'Acanthaceae'
+-- EXEC CreateFamily @FamilyName = 'Nyctaginaceae'
+-- EXEC CreateConservation @ConservationName = 'LC'
+-- EXEC CreateZone @ZoneName = '10'
+-- EXEC CreateLight @LightName = 'Full Sun'
 
 
-declare @korisnikID int
-EXEC CreateUser @Username = 'user12', @Password = 'password1', @Admin = 0, @ID =  @korisnikID OUTPUT
-EXEC CreateUser @Username = 'user21', @Password = 'password2', @Admin = 0, @ID =  @korisnikID OUTPUT
+-- declare @biljkicaID int
 
-exec GetAllPlants
+-- EXEC CreatePlant @Common = 'Firecracker Plant',
+-- @Botanical = 'Russelia equisetiformis',
+-- @FamilyID = 8,
+-- @ConservationID = 2,
+-- @Description = 'Firecracker Plant is a fast-growing, evergreen shrub that produces tubular, red flowers throughout the year. It is a great plant for attracting hummingbirds to the garden.',
+-- @Picture = 'https://www.gardeningknowhow.com/wp-content/uploads/2019/07/firecracker-plant.jpg',
+-- @ZoneID = 2,
+-- @LightID = 2,
+-- @Price = 9.99,
+-- @Availability = 10,
+-- @ID = @biljkicaID OUTPUT 
+
+-- select @biljkicaID
+
+-- EXEC CreatePlant @Common = 'Bougainvillea',
+-- @Botanical = 'Bougainvillea spectabilis',
+-- @FamilyID = 9,
+-- @ConservationID = 2,
+-- @Description = 'Bougainvillea is a tropical vine that can grow up to 30 feet tall. It produces colorful bracts in shades of pink, red, purple, and white.',
+-- @Picture = 'https://www.gardeningknowhow.com/wp-content/uploads/2019/07/bougainvillea.jpg',
+-- @ZoneID = 2,
+-- @LightID = 2,
+-- @Price = 14.99,
+-- @Availability = 5, 
+-- @ID = @biljkicaID OUTPUT 
+
+
+-- declare @korisnikID int
+-- EXEC CreateUser @Username = 'user12', @Password = 'password1', @Admin = 0, @ID =  @korisnikID OUTPUT
+-- EXEC CreateUser @Username = 'user21', @Password = 'password2', @Admin = 0, @ID =  @korisnikID OUTPUT
+
+-- exec GetAllPlants
 --- TEST DATA END
 
+
 -- --- TEST delete all data
+-- USE PEVEC 
 -- EXEC DeleteAllPlants
 -- EXEC DeleteAllFamilies
 -- EXEC DeleteAllConservations
 -- EXEC DeleteAllZones
 -- EXEC DeleteAllLights
 -- EXEC DeleteAllUsers
+
+-- drop TABLE zone
 --- TEST delete all data
 
