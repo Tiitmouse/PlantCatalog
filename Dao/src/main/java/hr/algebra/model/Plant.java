@@ -174,11 +174,9 @@ public class Plant implements Comparable<Plant>{
 
     @Override
     public String toString() {
-        return "Plant{" + "id=" + id + ", common_name=" + common_name + ", botanical_name=" 
-                + botanical_name + ", family=" + family + ", conservation_status=" + conservation_status 
-                + ", description=" + description + ", picture_path=" + picture_path + ", light=" + light 
-                + ", zone=" + zone + ", price=" + price + ", availability=" + availability + '}';
+        return common_name + "(" + botanical_name + ')';
     }
+
     
 
     @Override

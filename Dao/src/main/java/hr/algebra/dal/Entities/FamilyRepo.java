@@ -29,7 +29,7 @@ public class FamilyRepo implements Repository<Family> {
     private static final String CREATE_FAMILY = "{ CALL CreateFamily (?,?) }";
     private static final String GET_FAMILY = "{ CALL GetFamily (?) }";
     private static final String GET_ALL_FAMILIES = "{ CALL GetAllFamilies }";
-    private static final String UPDATE_FAMILY = "{ CALL UpdateFamily (?) }";
+    private static final String UPDATE_FAMILY = "{ CALL UpdateFamily (?,?) }";
     private static final String DELETE_FAMILY = "{ CALL DeleteFamily (?) }";
     private static final String DELETE_ALL_FAMILIES = "{ CALL DeleteAllFamilies }";
     
@@ -38,7 +38,7 @@ public class FamilyRepo implements Repository<Family> {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_FAMILY)) {
 
-            stmt.setString(FAMILYNAME, item.getFamilyName());
+            stmt.setString(FAMILYNAME, item.getName());
             stmt.registerOutParameter(ID_FAMILY, Types.INTEGER);
 
             stmt.executeUpdate();
@@ -56,7 +56,7 @@ public class FamilyRepo implements Repository<Family> {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_FAMILY)) {
 
             stmt.setInt(ID_FAMILY, id);
-            stmt.setString(FAMILYNAME, item.getFamilyName());
+            stmt.setString(FAMILYNAME, item.getName());
 
             stmt.executeUpdate();
         }     }

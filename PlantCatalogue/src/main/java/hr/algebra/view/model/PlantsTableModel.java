@@ -48,13 +48,13 @@ public class PlantsTableModel extends AbstractTableModel {
             case 2:
                 return plants.get(rowIndex).getBotanical_name();
             case 3:
-                return plants.get(rowIndex).getFamily().getFamilyName();
+                return plants.get(rowIndex).getFamily().getName();
             case 4:
-                return plants.get(rowIndex).getConservation_status().getConservationName();
+                return plants.get(rowIndex).getConservation_status().getName();
             case 5:
-                return plants.get(rowIndex).getZone().getZoneName();
+                return plants.get(rowIndex).getZone().getName();
             case 6:
-                return plants.get(rowIndex).getLight().getLightName();
+                return plants.get(rowIndex).getLight().getName();
             case 7:
                 return plants.get(rowIndex).getPrice();
             case 8:

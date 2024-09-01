@@ -27,22 +27,23 @@ public class ZoneRepo implements Repository<Zone> {
 
     private static final String CREATE_ZONE = "{ CALL CreateZone (?,?) }";
     private static final String GET_ZONE = "{ CALL GetZone (?) }";
-    private static final String GET_ALL_ZONES = "{ CALL GetAllFamilies }";
-    private static final String UPDATE_ZONE = "{ CALL UpdateZone (?) }";
+    private static final String GET_ALL_ZONES = "{ CALL GetAllZones }";
+    private static final String UPDATE_ZONE = "{ CALL UpdateZone (?,?) }";
     private static final String DELETE_ZONE = "{ CALL DeleteZone (?) }";
-    private static final String DELETE_ALL_ZONES = "{ CALL DeleteAllFamilies }";
+    private static final String DELETE_ALL_ZONES = "{ CALL DeleteAllZones }";
     
     @Override
     public int create(Zone item) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_ZONE)) {
 
-            stmt.setString(ZONENAME, item.getZoneName());
+            stmt.setString(ZONENAME, item.getName());
             stmt.registerOutParameter(ID_ZONE, Types.INTEGER);
 
             stmt.executeUpdate();
             return stmt.getInt(ID_ZONE);
-        }    }
+        }    
+    }
 
     @Override
     public void createMany(List<Zone> items) throws Exception {
@@ -55,7 +56,7 @@ public class ZoneRepo implements Repository<Zone> {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_ZONE)) {
 
             stmt.setInt(ID_ZONE, id);
-            stmt.setString(ZONENAME, item.getZoneName());
+            stmt.setString(ZONENAME, item.getName());
 
             stmt.executeUpdate();
         }     }

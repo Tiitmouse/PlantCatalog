@@ -63,5 +63,9 @@ public class FileUtils {
             Files.copy(is, Paths.get(destination));
         }
     }
+    
+    public static void deleteAllAssets(){
+        
+    }
 
 }

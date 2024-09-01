@@ -8,32 +8,15 @@ package hr.algebra.model;
  *
  * @author lorena
  */
-public class Conservation implements Comparable<Conservation> {
-    private int id;
-    private String conservationName;
+public class Conservation extends Super implements Comparable<Conservation> {
 
-    public Conservation(String conservationName) {
-        this.conservationName = conservationName;
+    public Conservation(String name) {
+        super(name);
     }
 
-    public Conservation(int id, String conservationName) {
-        this.id = id;
-        this.conservationName = conservationName;
-    }
-    
-    
-
-    public int getId() {
-        return id;
-    }
-
-    public String getConservationName() {
-        return conservationName;
-    }
-
-    public void setConservationName(String conservationName) {
-        this.conservationName = conservationName;
-    }
+    public Conservation(int id, String name) {
+        super(id, name);
+    }   
 
     @Override
     public boolean equals(Object obj) {
@@ -48,11 +31,6 @@ public class Conservation implements Comparable<Conservation> {
         }
         final Conservation other = (Conservation) obj;
         return this.id == other.id;
-    }
-
-    @Override
-    public String toString() {
-        return "Conservation{" + conservationName + '}';
     }
 
     @Override

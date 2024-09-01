@@ -1,3 +1,4 @@
+-- Active: 1723736230599@@127.0.0.1@1433@PEVEC
 CREATE DATABASE PEVEC GO ˆ
 
 USE PEVEC 
@@ -29,9 +30,10 @@ CREATE TABLE Conservation (
 ) 
 go
 
+
 CREATE TABLE [Zone] (
     ID int primary key not null IDENTITY(1, 1),
-    ZoneName NVARCHAR(20) NOT NULL
+    ZoneName NVARCHAR(30) NOT NULL
 ) 
 go
 
@@ -41,16 +43,17 @@ CREATE TABLE Light (
 ) 
 go
 
+
 CREATE TABLE Plant (
     ID INT PRIMARY KEY NOT NULL IDENTITY(1, 1),
     Common NVARCHAR(100) NOT NULL,
     Botanical NVARCHAR(100) NOT NULL,
     FamilyID int not null foreign key references Family (ID) on delete cascade,
-    ConservationID int not null foreign key references Conservation (ID),
+    ConservationID int not null foreign key references Conservation (ID) on delete cascade,
     [Description] NVARCHAR(max) NOT NULL,
     Picture NVARCHAR(200) NOT NULL,
-    ZoneID int not null foreign key references [Zone] (ID),
-    LightID int not null foreign key references Light (ID),
+    ZoneID int not null foreign key references [Zone] (ID) on delete cascade,
+    LightID int not null foreign key references Light (ID) on delete cascade,
     Price DECIMAL(10, 2) NOT NULL,
     [Availability] INT NOT NULL
 )
@@ -65,15 +68,14 @@ CREATE OR ALTER PROC CreatePlant
     @Description NVARCHAR(max),
     @Picture NVARCHAR(200),
     @ZoneID INT,
-    @LightID NVARCHAR(100),
+    @LightID INT,
     @Price DECIMAL(10,2),
     @Availability INT,
     @ID INT OUTPUT
 AS
-BEGIN
+BEGIN    
     INSERT INTO Plant (Common, Botanical, FamilyID, ConservationID, [Description], Picture, ZoneID, LightID, Price, [Availability])
     VALUES (@Common, @Botanical, @FamilyID, @ConservationID, @Description, @Picture, @ZoneID, @LightID, @Price, @Availability)
-
     set @ID = SCOPE_IDENTITY() 
 END
 ;
@@ -82,12 +84,12 @@ CREATE OR ALTER PROC UpdatePlant
     @ID INT,
     @Common NVARCHAR(100),
     @Botanical NVARCHAR(100),
-    @FamilyID NVARCHAR(100),
-    @ConservationID NVARCHAR(2),
+    @FamilyID INT,
+    @ConservationID INT,
     @Description NVARCHAR(max),
     @Picture NVARCHAR(200),
     @ZoneID INT,
-    @LightID NVARCHAR(100),
+    @LightID INT,
     @Price DECIMAL(10,2),
     @Availability INT
 AS
@@ -141,7 +143,7 @@ CREATE OR ALTER PROCEDURE CreateFamily
     @FamilyName NVARCHAR(100),
     @ID INT OUTPUT
 AS
-BEGIN
+BEGIN    
         INSERT INTO [Family] (FamilyName)
         VALUES (@FamilyName)
         set @ID = SCOPE_IDENTITY() 
@@ -160,7 +162,7 @@ END
 go
 
 CREATE OR ALTER PROCEDURE CreateZone
-    @ZoneName NVARCHAR(5),
+    @ZoneName NVARCHAR(30),
     @ID INT OUTPUT
 AS
 BEGIN
@@ -175,6 +177,7 @@ CREATE OR ALTER PROCEDURE CreateLight
     @ID INT OUTPUT
 AS
 BEGIN
+        begin
         INSERT INTO Light (LightName)
         VALUES (@LightName)
 set @ID = SCOPE_IDENTITY() 
@@ -456,4 +459,6 @@ exec CreateUser @Username = 'admin', @Password = 'password' @Admin = 1, @ID =  @
 
 -- drop TABLE zone
 --- TEST delete all data
+use PEVEC
+select * from User
 

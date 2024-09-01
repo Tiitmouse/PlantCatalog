@@ -27,17 +27,17 @@ public class ConservationRepo implements Repository<Conservation> {
 
     private static final String CREATE_CONSERVATION = "{ CALL CreateConservation (?,?) }";
     private static final String GET_CONSERVATION = "{ CALL GetConservation (?) }";
-    private static final String GET_ALL_CONSERVATIONS = "{ CALL GetAllFamilies }";
-    private static final String UPDATE_CONSERVATION = "{ CALL UpdateConservation (?) }";
+    private static final String GET_ALL_CONSERVATIONS = "{ CALL GetAllConservations }";
+    private static final String UPDATE_CONSERVATION = "{ CALL UpdateConservation (?,?) }";
     private static final String DELETE_CONSERVATION = "{ CALL DeleteConservation (?) }";
-    private static final String DELETE_ALL_CONSERVATIONS = "{ CALL DeleteAllFamilies }";
+    private static final String DELETE_ALL_CONSERVATIONS = "{ CALL DeleteAllConservations }";
     
     @Override
     public int create(Conservation item) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_CONSERVATION)) {
 
-            stmt.setString(CONSERVATIONNAME, item.getConservationName());
+            stmt.setString(CONSERVATIONNAME, item.getName());
             stmt.registerOutParameter(ID_CONSERVATION, Types.INTEGER);
 
             stmt.executeUpdate();
@@ -55,7 +55,7 @@ public class ConservationRepo implements Repository<Conservation> {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_CONSERVATION)) {
 
             stmt.setInt(ID_CONSERVATION, id);
-            stmt.setString(CONSERVATIONNAME, item.getConservationName());
+            stmt.setString(CONSERVATIONNAME, item.getName());
 
             stmt.executeUpdate();
         }     }

@@ -1,8 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package hr.algebra.view;
+
+import hr.algebra.dal.Context;
+import hr.algebra.dal.ContextFactory;
+import hr.algebra.model.User;
+import hr.algebra.utilities.MessageUtils;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -10,11 +14,19 @@ package hr.algebra.view;
  */
 public class UserPanel extends javax.swing.JPanel {
 
+    private final Context context;
+    private User logUser;
+    private final JTabbedPane tpContent;
+
     /**
      * Creates new form UserPanel
      */
-    public UserPanel() {
+    public UserPanel(User u, JTabbedPane pane) {
         initComponents();
+        tpContent = pane;
+        logUser = u;
+        setOriginalValues();
+        context = ContextFactory.getContext();
     }
 
     /**
@@ -30,8 +42,11 @@ public class UserPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tfPasswordInput = new javax.swing.JTextField();
-        btnSaveUserEdit = new javax.swing.JButton();
+        btnCancelUserEdit = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
+        lblUserID = new javax.swing.JLabel();
+        btnSaveUserEdit = new javax.swing.JButton();
+        btnDeleteAcc = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -49,12 +64,47 @@ public class UserPanel extends javax.swing.JPanel {
         tfPasswordInput.setBackground(new java.awt.Color(157, 168, 141));
         tfPasswordInput.setText("Password");
 
-        btnSaveUserEdit.setText("Save");
+        btnCancelUserEdit.setBackground(new java.awt.Color(157, 168, 141));
+        btnCancelUserEdit.setText("Cancel");
+        btnCancelUserEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelUserEditActionPerformed(evt);
+            }
+        });
 
         btnLogout.setBackground(new java.awt.Color(255, 204, 204));
         btnLogout.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         btnLogout.setForeground(new java.awt.Color(0, 0, 0));
         btnLogout.setText("logout ➤");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
+        lblUserID.setBackground(new java.awt.Color(255, 255, 255));
+        lblUserID.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
+        lblUserID.setForeground(new java.awt.Color(157, 168, 141));
+        lblUserID.setText("0");
+        lblUserID.setToolTipText("Your ID jus so you know {easterEgg}");
+
+        btnSaveUserEdit.setBackground(new java.awt.Color(157, 168, 141));
+        btnSaveUserEdit.setText("Save");
+        btnSaveUserEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveUserEditActionPerformed(evt);
+            }
+        });
+
+        btnDeleteAcc.setBackground(new java.awt.Color(255, 204, 204));
+        btnDeleteAcc.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnDeleteAcc.setForeground(new java.awt.Color(0, 0, 0));
+        btnDeleteAcc.setText("delete account");
+        btnDeleteAcc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteAccActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -62,52 +112,126 @@ public class UserPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(227, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(btnSaveUserEdit))
-                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblUserID)
+                        .addGap(74, 74, 74)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfUsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfPasswordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(56, 56, 56)
-                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(227, Short.MAX_VALUE))
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfUsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfPasswordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(81, 81, 81)
+                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(btnDeleteAcc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnCancelUserEdit)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnSaveUserEdit)))))
+                    .addComponent(jLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(89, Short.MAX_VALUE)
+                .addContainerGap(159, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGap(42, 42, 42)
+                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
                         .addComponent(tfUsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tfPasswordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(41, 41, 41)
+                        .addComponent(lblUserID)))
                 .addGap(18, 18, 18)
-                .addComponent(btnSaveUserEdit)
-                .addContainerGap(221, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelUserEdit)
+                    .addComponent(btnSaveUserEdit))
+                .addGap(28, 28, 28)
+                .addComponent(btnDeleteAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(270, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCancelUserEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelUserEditActionPerformed
+        setOriginalValues();
+    }//GEN-LAST:event_btnCancelUserEditActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        LogOut();
+
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnSaveUserEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveUserEditActionPerformed
+
+        try {
+            context.users.update(logUser.getId(), new User(tfUsernameInput.getText(), tfPasswordInput.getText()));
+            MessageUtils.showInformationMessage("Success", "congrats u have new identity");
+        } catch (Exception ex) {
+            Logger.getLogger(UserPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "could not update user");
+        }
+    }//GEN-LAST:event_btnSaveUserEditActionPerformed
+
+    private void btnDeleteAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAccActionPerformed
+        {
+            try {
+                if (lblUserID.getText().equals("0")) {
+                    MessageUtils.showInformationMessage("nope", "there is no user to delete");
+                    return;
+                }
+                if (lblUserID.getText().equals("1")) {
+                    MessageUtils.showInformationMessage("nope", "you are admin lol \n what would we do withot you");
+                    return;
+                }
+                if (MessageUtils.showConfirmDialog(
+                        "Delete yourself?",
+                        "u sure?")) {
+                    try {
+                        context.users.delete(logUser.getId());
+                        MessageUtils.showInformationMessage("Success", "bye bye FOREVER");
+                        LogOut();
+                    } catch (Exception ex) {
+                        Logger.getLogger(UserPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        MessageUtils.showErrorMessage("Error", "Unable to remove you pest");
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(UserPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }    }//GEN-LAST:event_btnDeleteAccActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelUserEdit;
+    private javax.swing.JButton btnDeleteAcc;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnSaveUserEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblUserID;
     private javax.swing.JTextField tfPasswordInput;
     private javax.swing.JTextField tfUsernameInput;
     // End of variables declaration//GEN-END:variables
+
+    private void setOriginalValues() {
+        lblUserID.setText(String.valueOf(logUser.getId()));
+        tfUsernameInput.setText(logUser.getUsername());
+        tfPasswordInput.setText(logUser.getPassword());
+    }
+
+    private void LogOut() {
+        tpContent.removeAll();
+        var userLogin = new UserLoginPanel(tpContent);
+        tpContent.add("Login", userLogin);
+    }
 }

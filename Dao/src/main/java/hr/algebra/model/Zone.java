@@ -8,32 +8,15 @@ package hr.algebra.model;
  *
  * @author lorena
  */
-public class Zone implements Comparable<Zone> {
-    private int id;
-    private String zoneName;
+public class Zone extends Super implements Comparable<Zone> {
 
-    public Zone(String zoneName) {
-        this.zoneName = zoneName;
+    public Zone(String name) {
+        super(name);
     }
 
-    public Zone(int id, String zoneName) {
-        this.id = id;
-        this.zoneName = zoneName;
-    }
-
-    
-    
-    public int getId() {
-        return id;
-    }
-
-    public String getZoneName() {
-        return zoneName;
-    }
-
-    public void setZoneName(String zoneName) {
-        this.zoneName = zoneName;
-    }
+    public Zone(int id, String name) {
+        super(id, name);
+    }   
 
     @Override
     public boolean equals(Object obj) {
@@ -48,11 +31,6 @@ public class Zone implements Comparable<Zone> {
         }
         final Zone other = (Zone) obj;
         return this.id == other.id;
-    }
-
-    @Override
-    public String toString() {
-        return "Zone{" + zoneName + '}';
     }
 
     @Override

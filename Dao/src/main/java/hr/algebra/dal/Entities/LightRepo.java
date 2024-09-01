@@ -27,17 +27,17 @@ public class LightRepo implements Repository<Light> {
 
     private static final String CREATE_LIGHT = "{ CALL CreateLight (?,?) }";
     private static final String GET_LIGHT = "{ CALL GetLight (?) }";
-    private static final String GET_ALL_LIGHTS = "{ CALL GetAllFamilies }";
-    private static final String UPDATE_LIGHT = "{ CALL UpdateLight (?) }";
+    private static final String GET_ALL_LIGHTS = "{ CALL GetAllLights }";
+    private static final String UPDATE_LIGHT = "{ CALL UpdateLight (?,?) }";
     private static final String DELETE_LIGHT = "{ CALL DeleteLight (?) }";
-    private static final String DELETE_ALL_LIGHTS = "{ CALL DeleteAllFamilies }";
+    private static final String DELETE_ALL_LIGHTS = "{ CALL DeleteAllLights }";
     
     @Override
     public int create(Light item) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(CREATE_LIGHT)) {
 
-            stmt.setString(LIGHTNAME, item.getLightName());
+            stmt.setString(LIGHTNAME, item.getName());
             stmt.registerOutParameter(ID_LIGHT, Types.INTEGER);
 
             stmt.executeUpdate();
@@ -55,7 +55,7 @@ public class LightRepo implements Repository<Light> {
         try (Connection con = dataSource.getConnection(); CallableStatement stmt = con.prepareCall(UPDATE_LIGHT)) {
 
             stmt.setInt(ID_LIGHT, id);
-            stmt.setString(LIGHTNAME, item.getLightName());
+            stmt.setString(LIGHTNAME, item.getName());
 
             stmt.executeUpdate();
         }     }

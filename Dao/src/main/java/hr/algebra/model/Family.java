@@ -8,29 +8,15 @@ package hr.algebra.model;
  *
  * @author lorena
  */
-public class Family implements Comparable<Family> {
-    private int id;
-    private String familyName;
+public class Family extends Super implements Comparable<Family> {
 
-    public Family(String familyName) {
-        this.familyName = familyName;
-    }
-    public Family(int id, String familyName){
-        this.familyName = familyName;
-        this.id = id;
+    public Family(String name) {
+        super(name);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getFamilyName() {
-        return familyName;
-    }
-
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
+    public Family(int id, String name) {
+        super(id, name);
+    }   
 
     @Override
     public boolean equals(Object obj) {
@@ -47,13 +33,9 @@ public class Family implements Comparable<Family> {
         return this.id == other.id;
     }
 
-    @Override
-    public String toString() {
-        return "Family{" + familyName + '}';
-    }
 
     @Override
     public int compareTo(Family other) {
-        return Integer.compare(this.id, other.id);    
+        return Integer.compare(this.id, other.id);
     }
 }

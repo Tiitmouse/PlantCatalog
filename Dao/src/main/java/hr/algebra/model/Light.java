@@ -8,29 +8,14 @@ package hr.algebra.model;
  *
  * @author lorena
  */
-public class Light implements Comparable<Light> {
-    private int id;
-    private String lightName;
+public class Light extends Super implements Comparable<Light> {
 
-    public Light(String lightName) {
-        this.lightName = lightName;
+    public Light(String name) {
+        super(name);
     }
 
-    public Light(int id, String lightName) {
-        this.id = id;
-        this.lightName = lightName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getLightName() {
-        return lightName;
-    }
-
-    public void setLightName(String lightName) {
-        this.lightName = lightName;
+    public Light(int id, String name) {
+        super(id, name);
     }
 
     @Override
@@ -49,12 +34,7 @@ public class Light implements Comparable<Light> {
     }
 
     @Override
-    public String toString() {
-        return "Light{" + lightName + '}';
-    }
-
-    @Override
     public int compareTo(Light other) {
-        return Integer.compare(this.id, other.id);    
+        return Integer.compare(this.id, other.id);
     }
 }

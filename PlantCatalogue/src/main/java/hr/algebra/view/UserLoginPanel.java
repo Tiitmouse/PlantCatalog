@@ -4,7 +4,14 @@
  */
 package hr.algebra.view;
 
+import hr.algebra.dal.Context;
 import hr.algebra.dal.ContextFactory;
+import hr.algebra.model.User;
+import hr.algebra.utilities.MessageUtils;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -12,13 +19,34 @@ import hr.algebra.dal.ContextFactory;
  */
 public class UserLoginPanel extends javax.swing.JPanel {
 
-    private String username;
-    private String password;
+    private User loggedInUser = null;
+    private final Context context;
+    private final JTabbedPane tpContent;
+
     /**
      * Creates new form UserLoginPanel
      */
-    public UserLoginPanel() {
+    public UserLoginPanel(JTabbedPane tpContent) {
         initComponents();
+        this.tpContent = tpContent;
+        context = ContextFactory.getContext();
+    }
+
+    public void setStuff() {
+        if (loggedInUser == null) {
+            return;
+        }
+        if (loggedInUser.isAdmin()) {
+            tpContent.add("Controls", new AdminControlPanel());
+
+        }
+        tpContent.add("Plant editing", new CRUDPlantPanel());
+        tpContent.add("Super editing", new EditSuperPanel());
+        tpContent.add("User", new UserPanel(loggedInUser, tpContent));
+
+        // TODO fix double creating
+        tpContent.remove(0);
+        //tpContent.setSelectedIndex(1);
     }
 
     /**
@@ -32,8 +60,9 @@ public class UserLoginPanel extends javax.swing.JPanel {
 
         tfUsernameInput = new javax.swing.JTextField();
         btnLoginProceed = new javax.swing.JButton();
-        lblLoginPicture = new javax.swing.JLabel();
         tfPasswordInput = new javax.swing.JPasswordField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setBackground(java.awt.Color.white);
 
@@ -43,50 +72,105 @@ public class UserLoginPanel extends javax.swing.JPanel {
         btnLoginProceed.setBackground(new java.awt.Color(157, 168, 141));
         btnLoginProceed.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         btnLoginProceed.setText("➤");
-
-        lblLoginPicture.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblLoginPicture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginPlant.png"))); // NOI18N
+        btnLoginProceed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginProceedActionPerformed(evt);
+            }
+        });
 
         tfPasswordInput.setBackground(new java.awt.Color(157, 168, 141));
         tfPasswordInput.setText("jPasswordField1");
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setBackground(new java.awt.Color(255, 255, 255));
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jTextArea1.setForeground(new java.awt.Color(157, 168, 141));
+        jTextArea1.setRows(5);
+        jTextArea1.setText("⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⡶⠖⣶⠤⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⢀⣠⡴⠚⡉⠡⢈⠙⢦⣴⠞⠛⠳⣦⡘⠛⢩⣿⣦⠀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠛⠷⢤⣴⣀⣁⣂⣬⣼⣇⣤⡌⠐⢈⠻⡦⠘⠛⡛⣧⠀⠀⠀⠀⣰⠏⠀⠙⣧⣀⣀⣴⠋⠈⠙⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⡀⠀⣶⠶⠻⢧⡀⢹⣻⡟⣿⠃⣾⣧⠁⣰⣄⠙⣿⣛⠀⣀⣀⣰⠇⠀⠀⠀⠸⢻⠻⠃⠀⠀⠀⢘⣆⣀⡀⠀⠀⠀⠀⠀⠀⠀\n⠀⢀⣴⣾⡝⠛⠛⣀⣴⣾⠧⢼⣯⣧⣿⡷⠇⣻⣀⣯⢹⡀⢄⡿⠀⣉⣽⢿⠃⠠⡾⠆⢠⣷⠄⠰⡷⠀⠘⣿⡽⣧⣀⠀⠀⠀⠀⠀⠀⠀\n⢀⡤⠶⠖⠋⣐⣴⠟⠁⡀⠄⡂⠈⣿⣿⠶⠶⢦⣍⠉⠈⠙⠛⠁⠀⢠⠏⠀⠀⢀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠘⣇⠀⠀⠀⠀⠀⠀⠀\n⡾⠷⢶⡌⠐⠈⡁⢄⣂⡰⢸⡿⣦⣿⣿⢀⠐⡀⠌⣧⠀⠀⠀⠀⢀⣾⣰⠖⠛⠉⠉⠈⢻⡿⣽⠷⣦⡀⠀⠀⠀⢰⣿⡆⠀⠀⠀⠀⠀⠀\n⢴⠛⠉⢰⡟⣧⠀⣸⡟⣇⢈⣷⢹⣿⣿⢦⣔⡀⢂⣿⠀⠀⠀⡴⢋⣿⣿⡆⠀⠀⠀⠀⠀⢷⣾⣿⠋⠁⠀⠀⠀⠀⠙⣻⡄⠀⠀⠀⠀⠀\n⠸⢦⣥⡾⠁⠿⣤⠼⠇⠛⠋⠀⠀⣿⣿⠀⠈⠉⠉⠁⠀⠀⠘⢷⡟⠮⣝⣇⠀⠀⠀⠀⢀⣀⡿⠁⠀⠀⠀⠀⠀⠀⠸⣿⣧⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⢸⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⣻⠀⠀⠀⢸⠇⠀⠀⠻⠤⠶⠖⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢹⡀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣹⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡇⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠈⠓⣶⠶⠶⠶⠶⠶⠶⠶⠶⣶⠛⠀⠀⠀⢸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⡇⠀⣴⣿⣦\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⠀⠀⠀⠀⠀⠀⠀⢠⡇⠀⠀⠀⠀⠈⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣤⣾⣅⣩⠏\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⣸⠁⠀⠀⠀⠀⢠⡞⠳⡦⠀⠀⠀⠀⠀⠀⠀⣠⠦⣤⡀⠀⠀⠀⠀⠀⢠⣿⣇⣼⠿⠋⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠓⠒⠒⠖⠲⠒⠒⠛⠀⠀⠀⠀⠀⠀⠙⠓⠒⠒⠒⠒⠒⠦⠶⠴⠿⠶⠶⠴⠖⠒⠒⠒⠚⠛⠉⠁⠀⠀⠀⠀");
+        jTextArea1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
+        jTextArea1.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTextArea1.setDisabledTextColor(new java.awt.Color(157, 50, 222));
+        jTextArea1.setFocusTraversalKeysEnabled(false);
+        jTextArea1.setFocusable(false);
+        jTextArea1.setHighlighter(null);
+        jTextArea1.setSelectionColor(new java.awt.Color(255, 255, 255));
+        jTextArea1.setVerifyInputWhenFocusTarget(false);
+        jScrollPane1.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(135, Short.MAX_VALUE)
-                .addComponent(lblLoginPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addContainerGap(342, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 628, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tfUsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfPasswordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btnLoginProceed, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addComponent(btnLoginProceed, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(178, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblLoginPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(286, 286, 286)
-                        .addComponent(tfUsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tfPasswordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnLoginProceed, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(251, 251, 251)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(tfUsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(tfPasswordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(btnLoginProceed, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(22, 22, 22))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLoginProceedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginProceedActionPerformed
+        try {
+            List<User> users = context.users.selectAll();
+            var user = users.stream().filter(u -> u.getUsername().equals(tfUsernameInput.getText())).findFirst().orElse(null);
+
+            if (user == null) {
+                context.users.create(new User(tfUsernameInput.getText(), new String(tfPasswordInput.getPassword())));
+                loggedInUser = user;
+                MessageUtils.showInformationMessage("Success", "yello");
+            } else {
+                try {
+                    if (context.users.select(user.getId()).get().getPassword().equals(new String(tfPasswordInput.getPassword()))) {
+                        loggedInUser = user;
+                        MessageUtils.showInformationMessage("Success", "it seem that you are who you are");
+                    } else {
+                        MessageUtils.showErrorMessage("Error", "New phone, who this?");
+                    }
+
+                } catch (Exception ex) {
+                    Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Could not get user");
+                }
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(UserLoginPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            setStuff();
+
+        }
+
+
+    }//GEN-LAST:event_btnLoginProceedActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLoginProceed;
-    private javax.swing.JLabel lblLoginPicture;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPasswordField tfPasswordInput;
     private javax.swing.JTextField tfUsernameInput;
     // End of variables declaration//GEN-END:variables

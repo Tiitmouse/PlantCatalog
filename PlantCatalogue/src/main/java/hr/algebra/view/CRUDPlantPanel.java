@@ -4,16 +4,43 @@
  */
 package hr.algebra.view;
 
+import hr.algebra.dal.Context;
+import hr.algebra.dal.ContextFactory;
+import hr.algebra.model.Conservation;
+import hr.algebra.model.Family;
+import hr.algebra.model.Light;
+import hr.algebra.model.Plant;
+import hr.algebra.model.Super;
+import hr.algebra.model.Zone;
+import hr.algebra.utilities.FileUtils;
+import hr.algebra.utilities.IconUtils;
+import hr.algebra.utilities.MessageUtils;
+import hr.algebra.view.model.DropdownModel;
+import hr.algebra.view.model.PlantDropdownModel;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import static javax.swing.text.html.HTML.Attribute.DIR;
+
 /**
  *
  * @author lorena
  */
 public class CRUDPlantPanel extends javax.swing.JPanel {
 
+    private final Context context;
+
     /**
      * Creates new form CRUDPlantPanel
      */
     public CRUDPlantPanel() {
+        context = ContextFactory.getContext();
         initComponents();
     }
 
@@ -26,16 +53,15 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnDoneEditing = new javax.swing.JButton();
+        btnDoneUpdating = new javax.swing.JButton();
         btnCanceEditing = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        lblPlantPicture = new javax.swing.JLabel();
         tfPicture = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         cbLights = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         cbZones = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
-        tfDescription = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         cbFamilies = new javax.swing.JComboBox<>();
@@ -48,45 +74,66 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         cbPlants = new javax.swing.JComboBox<>();
         btnDeletePlant = new javax.swing.JButton();
+        btnUploadPictureFromPc = new javax.swing.JButton();
+        btnCreateNewPlant = new javax.swing.JButton();
+        lblPlantID = new javax.swing.JLabel();
+        btnClear = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        taDescription = new javax.swing.JTextArea();
+        lblPlantPrice = new javax.swing.JLabel();
+        lblPlantAvail = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
-        btnDoneEditing.setBackground(new java.awt.Color(137, 151, 116));
-        btnDoneEditing.setText("Done");
+        btnDoneUpdating.setBackground(new java.awt.Color(137, 151, 116));
+        btnDoneUpdating.setText("Update");
+        btnDoneUpdating.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoneUpdatingActionPerformed(evt);
+            }
+        });
 
         btnCanceEditing.setBackground(new java.awt.Color(137, 151, 116));
         btnCanceEditing.setText("Cancel");
+        btnCanceEditing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCanceEditingActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("jLabel1");
-        jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 5, true));
+        lblPlantPicture.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 5, true));
 
         tfPicture.setBackground(new java.awt.Color(255, 255, 255));
         tfPicture.setForeground(new java.awt.Color(137, 151, 116));
-        tfPicture.setText("picture path");
+        tfPicture.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        tfPicture.setText("paste picture path");
         tfPicture.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 2, true));
+        tfPicture.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfPictureActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(137, 151, 116));
         jLabel9.setText("Picture");
 
         cbLights.setBackground(new java.awt.Color(137, 151, 116));
-        cbLights.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel8.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(137, 151, 116));
         jLabel8.setText("Light");
 
         cbZones.setBackground(new java.awt.Color(137, 151, 116));
-        cbZones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel7.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(137, 151, 116));
         jLabel7.setText("Zone");
-
-        tfDescription.setBackground(new java.awt.Color(255, 255, 255));
-        tfDescription.setForeground(new java.awt.Color(137, 151, 116));
-        tfDescription.setText("description");
-        tfDescription.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 2, true));
 
         jLabel6.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(137, 151, 116));
@@ -98,17 +145,16 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
 
         cbFamilies.setBackground(new java.awt.Color(137, 151, 116));
         cbFamilies.setForeground(new java.awt.Color(255, 255, 255));
-        cbFamilies.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel5.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(137, 151, 116));
         jLabel5.setText("Conservation");
 
         cbConservations.setBackground(new java.awt.Color(137, 151, 116));
-        cbConservations.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         tfBotanicalName.setBackground(new java.awt.Color(255, 255, 255));
         tfBotanicalName.setForeground(new java.awt.Color(137, 151, 116));
+        tfBotanicalName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         tfBotanicalName.setText("plant botanical name");
         tfBotanicalName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 2, true));
 
@@ -118,6 +164,7 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
 
         tfCommonName.setBackground(new java.awt.Color(255, 255, 255));
         tfCommonName.setForeground(new java.awt.Color(137, 151, 116));
+        tfCommonName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         tfCommonName.setText("plant common name");
         tfCommonName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 2, true));
 
@@ -130,22 +177,99 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
         jLabel10.setText("Choose a plant");
 
         cbPlants.setBackground(new java.awt.Color(137, 151, 116));
-        cbPlants.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbPlants.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbPlantsActionPerformed(evt);
+            }
+        });
 
         btnDeletePlant.setBackground(new java.awt.Color(255, 204, 204));
         btnDeletePlant.setForeground(new java.awt.Color(0, 0, 0));
         btnDeletePlant.setText("Delete");
+        btnDeletePlant.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletePlantActionPerformed(evt);
+            }
+        });
+
+        btnUploadPictureFromPc.setBackground(new java.awt.Color(137, 151, 116));
+        btnUploadPictureFromPc.setForeground(new java.awt.Color(0, 0, 0));
+        btnUploadPictureFromPc.setText("Upload from pc");
+        btnUploadPictureFromPc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadPictureFromPcActionPerformed(evt);
+            }
+        });
+
+        btnCreateNewPlant.setBackground(new java.awt.Color(137, 151, 116));
+        btnCreateNewPlant.setText("Create new");
+        btnCreateNewPlant.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateNewPlantActionPerformed(evt);
+            }
+        });
+
+        lblPlantID.setBackground(new java.awt.Color(255, 255, 255));
+        lblPlantID.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        lblPlantID.setForeground(new java.awt.Color(137, 151, 116));
+        lblPlantID.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPlantID.setText("0");
+
+        btnClear.setBackground(new java.awt.Color(137, 151, 116));
+        btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
+
+        taDescription.setBackground(new java.awt.Color(255, 255, 255));
+        taDescription.setColumns(20);
+        taDescription.setForeground(new java.awt.Color(137, 151, 116));
+        taDescription.setRows(5);
+        taDescription.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 1, true));
+        jScrollPane1.setViewportView(taDescription);
+
+        lblPlantPrice.setBackground(new java.awt.Color(255, 255, 255));
+        lblPlantPrice.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        lblPlantPrice.setForeground(new java.awt.Color(137, 151, 116));
+        lblPlantPrice.setText("price");
+
+        lblPlantAvail.setBackground(new java.awt.Color(255, 255, 255));
+        lblPlantAvail.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        lblPlantAvail.setForeground(new java.awt.Color(137, 151, 116));
+        lblPlantAvail.setText("avail.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(60, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnCanceEditing)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDoneUpdating)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCreateNewPlant)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDeletePlant))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel10)
+                            .addGap(18, 18, 18)
+                            .addComponent(cbPlants, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(10, 10, 10)
+                            .addComponent(lblPlantID, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(42, 42, 42)
+                            .addComponent(lblPlantPrice)
+                            .addGap(88, 88, 88)
+                            .addComponent(lblPlantAvail))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel2)
@@ -154,16 +278,7 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(tfBotanicalName, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel3)))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(cbFamilies, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(28, 28, 28)
-                                    .addComponent(jLabel5)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(cbConservations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jLabel6)
-                                .addComponent(tfDescription)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel7)
                                     .addGap(18, 18, 18)
@@ -171,33 +286,43 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
                                     .addGap(45, 45, 45)
                                     .addComponent(jLabel8)
                                     .addGap(18, 18, 18)
-                                    .addComponent(cbLights, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(cbLights, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jLabel9)
-                                .addComponent(tfPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbPlants, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCanceEditing)
-                        .addGap(42, 42, 42)
-                        .addComponent(btnDoneEditing)
-                        .addGap(34, 34, 34)
-                        .addComponent(btnDeletePlant)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cbFamilies, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(28, 28, 28)
+                                        .addComponent(jLabel5)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cbConservations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(tfPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnUploadPictureFromPc)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(lblPlantPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(cbPlants, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblPlantID)
+                                    .addComponent(lblPlantPrice)
+                                    .addComponent(lblPlantAvail)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel10)
+                                .addComponent(cbPlants, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3))
@@ -213,9 +338,9 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
                             .addComponent(cbConservations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tfDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(cbZones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -223,29 +348,234 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
                             .addComponent(cbLights, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnUploadPictureFromPc, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblPlantPicture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCanceEditing)
-                    .addComponent(btnDoneEditing)
-                    .addComponent(btnDeletePlant))
-                .addContainerGap(79, Short.MAX_VALUE))
+                    .addComponent(btnDoneUpdating)
+                    .addComponent(btnDeletePlant)
+                    .addComponent(btnCreateNewPlant)
+                    .addComponent(btnClear))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void FillPlantsDropdown() {
+        try {
+            var plants = context.plants.selectAll()
+                    .stream()
+                    .sorted((i1, i2) -> i1.getCommon_name().compareTo(i2.getCommon_name()))
+                    .toList();
+            var model = new PlantDropdownModel(new ArrayList<Plant>(plants));
+            cbPlants.setModel(model);
+        } catch (Exception ex) {
+            Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to fetch plants");
+        }
+    }
+
+    private void FillSuperDropdowns() {
+        try {
+            var families = context.families.selectAll()
+                    .stream()
+                    .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                    .toList();
+            var model = new DropdownModel(new ArrayList<Super>(families));
+            cbFamilies.setModel(model);
+        } catch (Exception ex) {
+            Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to fetch families");
+        }
+
+        try {
+            var conservations = context.conservations.selectAll()
+                    .stream()
+                    .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                    .toList();
+            var model = new DropdownModel(new ArrayList<Super>(conservations));
+            cbConservations.setModel(model);
+        } catch (Exception ex) {
+            Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to fetch conservations");
+        }
+
+        try {
+            var zones = context.zones.selectAll()
+                    .stream()
+                    .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                    .toList();
+            var model = new DropdownModel(new ArrayList<Super>(zones));
+            cbZones.setModel(model);
+        } catch (Exception ex) {
+            Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to fetch zoens");
+        }
+
+        try {
+            var lights = context.lights.selectAll()
+                    .stream()
+                    .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                    .toList();
+            var model = new DropdownModel(new ArrayList<Super>(lights));
+            cbLights.setModel(model);
+        } catch (Exception ex) {
+            Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "Unable to fetch lights");
+        }
+
+        lblPlantPicture.setIcon(null);
+    }
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        FillPlantsDropdown();
+        FillSuperDropdowns();
+        clearing();
+    }//GEN-LAST:event_formComponentShown
+
+    private void cbPlantsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPlantsActionPerformed
+        var pl = cbPlants.getSelectedItem();
+        setFields((Plant) pl);
+    }//GEN-LAST:event_cbPlantsActionPerformed
+
+    private void btnCanceEditingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanceEditingActionPerformed
+        try {
+            Plant p = (Plant) cbPlants.getSelectedItem();
+            setFields(p);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnCanceEditingActionPerformed
+
+    private void btnDoneUpdatingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoneUpdatingActionPerformed
+        int id = Integer.parseInt(lblPlantID.getText());
+        if (id == 0) {
+            MessageUtils.showErrorMessage("Error", "Select a plant to update");
+            return;
+        }
+
+        Family family = (Family) cbFamilies.getSelectedItem();
+        Conservation conservation = (Conservation) cbConservations.getSelectedItem();
+        Zone zone = (Zone) cbZones.getSelectedItem();
+        Light light = (Light) cbLights.getSelectedItem();
+
+        Plant newPlantDetails = new Plant(
+                tfCommonName.getText(),
+                tfBotanicalName.getText(),
+                family,
+                conservation,
+                taDescription.getText(),
+                tfPicture.getText(),
+                zone,
+                light,
+                Double.parseDouble(lblPlantPrice.getText()),
+                Integer.parseInt(lblPlantAvail.getText())
+        );
+        try {
+            context.plants.update(id, newPlantDetails);
+            MessageUtils.showInformationMessage("Success", "plant has been updated");
+        } catch (Exception ex) {
+            Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "plant could not be updated");
+        }
+        clearing();
+        FillPlantsDropdown();
+        FillSuperDropdowns();
+    }//GEN-LAST:event_btnDoneUpdatingActionPerformed
+
+    private void btnUploadPictureFromPcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadPictureFromPcActionPerformed
+        File file = FileUtils.uploadFile("Images", "jpg", "jpeg", "png");
+        tfPicture.setText(file.getAbsolutePath());
+        setPicture(lblPlantPicture, file);
+    }//GEN-LAST:event_btnUploadPictureFromPcActionPerformed
+
+    private void btnDeletePlantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletePlantActionPerformed
+        int id = Integer.parseInt(lblPlantID.getText());
+        if (id == 0) {
+            MessageUtils.showErrorMessage("Error", "No plant selected");
+            return;
+        }
+        try {
+            Plant p = context.plants.select(id).get();
+            if (p.getPicture_path() != null) {
+                Files.deleteIfExists(Paths.get(p.getPicture_path()));
+            }
+            context.plants.delete(id);
+            MessageUtils.showInformationMessage("Success", "plant gone");
+
+        } catch (Exception ex) {
+            Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "plant could not be deleted");
+        }
+
+        clearing();
+        FillPlantsDropdown();
+        FillSuperDropdowns();
+
+    }//GEN-LAST:event_btnDeletePlantActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clearing();
+        FillPlantsDropdown();
+        FillSuperDropdowns();
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void tfPictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPictureActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfPictureActionPerformed
+
+    private void btnCreateNewPlantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewPlantActionPerformed
+
+        int id = Integer.parseInt(lblPlantID.getText());
+        if (id != 0) {
+            MessageUtils.showErrorMessage("Error", "please unselect the existing plant");
+            return;
+        }
+
+        Family family = (Family) cbFamilies.getSelectedItem();
+        Conservation conservation = (Conservation) cbConservations.getSelectedItem();
+        Zone zone = (Zone) cbZones.getSelectedItem();
+        Light light = (Light) cbLights.getSelectedItem();
+
+        Plant newPlantDetails = new Plant(
+                tfCommonName.getText(),
+                tfBotanicalName.getText(),
+                family,
+                conservation,
+                taDescription.getText(),
+                tfPicture.getText(),
+                zone,
+                light,
+                Math.random() * (12.99 - 1.2 + 1.7) + 1.2,
+                (int) (Math.random() * (1345 - 356 + 1) + 356)
+        );
+        try {
+            context.plants.create(newPlantDetails);
+            MessageUtils.showInformationMessage("Success", "plant has been created \n you are making bees happy");
+        } catch (Exception ex) {
+            Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            MessageUtils.showErrorMessage("Error", "plant could not be created");
+        }
+        clearing();
+        FillPlantsDropdown();
+        FillSuperDropdowns();
+    }//GEN-LAST:event_btnCreateNewPlantActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCanceEditing;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnCreateNewPlant;
     private javax.swing.JButton btnDeletePlant;
-    private javax.swing.JButton btnDoneEditing;
-    private javax.swing.JComboBox<String> cbConservations;
-    private javax.swing.JComboBox<String> cbFamilies;
-    private javax.swing.JComboBox<String> cbLights;
-    private javax.swing.JComboBox<String> cbPlants;
-    private javax.swing.JComboBox<String> cbZones;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnDoneUpdating;
+    private javax.swing.JButton btnUploadPictureFromPc;
+    private javax.swing.JComboBox<Super> cbConservations;
+    private javax.swing.JComboBox<Super> cbFamilies;
+    private javax.swing.JComboBox<Super> cbLights;
+    private javax.swing.JComboBox<Plant> cbPlants;
+    private javax.swing.JComboBox<Super> cbZones;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -255,9 +585,72 @@ public class CRUDPlantPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblPlantAvail;
+    private javax.swing.JLabel lblPlantID;
+    private javax.swing.JLabel lblPlantPicture;
+    private javax.swing.JLabel lblPlantPrice;
+    private javax.swing.JTextArea taDescription;
     private javax.swing.JTextField tfBotanicalName;
     private javax.swing.JTextField tfCommonName;
-    private javax.swing.JTextField tfDescription;
     private javax.swing.JTextField tfPicture;
     // End of variables declaration//GEN-END:variables
+
+    private void setFields(Plant p) {
+        setPicture(lblPlantPicture, readFile(p.getPicture_path()));
+        tfCommonName.setText(p.getCommon_name());
+        tfBotanicalName.setText(p.getBotanical_name());
+        taDescription.setText(p.getDescription());
+        taDescription.setColumns(20);
+        taDescription.setLineWrap(true);
+        taDescription.setRows(5);
+
+        tfPicture.setText(p.getPicture_path());
+
+        lblPlantID.setText(String.valueOf(p.getId()));
+
+        cbFamilies.setSelectedItem(p.getFamily());
+        cbConservations.setSelectedItem(p.getConservation_status());
+        cbZones.setSelectedItem(p.getZone());
+        cbLights.setSelectedItem(p.getLight());
+        lblPlantPrice.setText(String.valueOf(p.getPrice()));
+        lblPlantAvail.setText(String.valueOf(p.getAvailability()));
+    }
+
+    private void setPicture(JLabel frame, File file) {
+        try {
+            frame.setIcon(IconUtils.createIcon(file, frame.getWidth(), frame.getHeight()));
+        } catch (Exception ex) {
+            Logger.getLogger(CRUDPlantPanel.class.getName()).log(Level.SEVERE, null, ex);
+            frame.setIcon(null);
+        }
+    }
+
+    private String uploadPicture() throws IOException {
+        String picturePath = tfPicture.getText();
+        String ext = picturePath.substring(picturePath.lastIndexOf("."));
+        String pictureName = UUID.randomUUID() + ext;
+        String localPicturePath = DIR + File.separator + pictureName;
+
+        FileUtils.copy(picturePath, localPicturePath);
+        return localPicturePath;
+    }
+
+    private void clearing() {
+        tfCommonName.setText("");
+        tfBotanicalName.setText("");
+        taDescription.setText("");
+        tfPicture.setText("");
+        lblPlantID.setText("0");
+        lblPlantPicture.setIcon(null);
+        lblPlantPrice.setText("price");
+        lblPlantAvail.setText("avail.");
+
+    }
+
+    private File readFile(String picPath) {
+        File f = new File(picPath);
+        return f;
+    }
+
 }

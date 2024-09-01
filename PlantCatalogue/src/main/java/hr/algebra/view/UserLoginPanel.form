@@ -22,37 +22,38 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace pref="135" max="32767" attributes="0"/>
-              <Component id="lblLoginPicture" min="-2" pref="452" max="-2" attributes="0"/>
-              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="342" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" pref="628" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="tfUsernameInput" min="-2" pref="172" max="-2" attributes="0"/>
                   <Component id="tfPasswordInput" min="-2" pref="169" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-              <Component id="btnLoginProceed" min="-2" pref="44" max="-2" attributes="0"/>
-              <EmptySpace pref="208" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnLoginProceed" min="-2" pref="73" max="-2" attributes="0"/>
+              <EmptySpace pref="178" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace pref="29" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblLoginPicture" min="-2" pref="601" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="286" max="-2" attributes="0"/>
-                      <Component id="tfUsernameInput" min="-2" pref="35" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="tfPasswordInput" min="-2" pref="36" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="btnLoginProceed" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="251" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" min="-2" pref="449" max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="tfUsernameInput" min="-2" pref="35" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="tfPasswordInput" min="-2" pref="36" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="btnLoginProceed" min="-2" pref="40" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="85" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -76,14 +77,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="&#x27a4;"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblLoginPicture">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/loginPlant.png"/>
-        </Property>
-      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoginProceedActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="tfPasswordInput">
       <Properties>
@@ -93,5 +89,54 @@
         <Property name="text" type="java.lang.String" value="jPasswordField1"/>
       </Properties>
     </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="jTextArea1">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Helvetica Neue" size="18" style="0"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="8d" green="a8" red="9d" type="rgb"/>
+            </Property>
+            <Property name="rows" type="int" value="5"/>
+            <Property name="text" type="java.lang.String" value="&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2880;&#x28c0;&#x28c0;&#x2840;&#x2800;&#x2800;&#x2800;&#x2800;&#x2876;&#x2816;&#x28f6;&#x2824;&#x2880;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2880;&#x28e0;&#x2874;&#x281a;&#x2849;&#x2821;&#x2888;&#x2819;&#x28a6;&#x28f4;&#x281e;&#x281b;&#x2833;&#x28e6;&#x2858;&#x281b;&#x28a9;&#x28ff;&#x28e6;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2880;&#x28c0;&#x28c0;&#x2800;&#x2800;&#x2800;&#x2800;&#x2880;&#x28c0;&#x2840;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x281b;&#x2837;&#x28a4;&#x28f4;&#x28c0;&#x28c1;&#x28c2;&#x28ec;&#x28fc;&#x28c7;&#x28e4;&#x284c;&#x2810;&#x2888;&#x283b;&#x2866;&#x2818;&#x281b;&#x285b;&#x28e7;&#x2800;&#x2800;&#x2800;&#x2800;&#x28f0;&#x280f;&#x2800;&#x2819;&#x28e7;&#x28c0;&#x28c0;&#x28f4;&#x280b;&#x2808;&#x2819;&#x28c6;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2840;&#x2800;&#x28f6;&#x2836;&#x283b;&#x28a7;&#x2840;&#x28b9;&#x28fb;&#x285f;&#x28ff;&#x2803;&#x28fe;&#x28e7;&#x2801;&#x28f0;&#x28c4;&#x2819;&#x28ff;&#x28db;&#x2800;&#x28c0;&#x28c0;&#x28f0;&#x2807;&#x2800;&#x2800;&#x2800;&#x2838;&#x28bb;&#x283b;&#x2803;&#x2800;&#x2800;&#x2800;&#x2898;&#x28c6;&#x28c0;&#x2840;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2800;&#x2880;&#x28f4;&#x28fe;&#x285d;&#x281b;&#x281b;&#x28c0;&#x28f4;&#x28fe;&#x2827;&#x28bc;&#x28ef;&#x28e7;&#x28ff;&#x2877;&#x2807;&#x28fb;&#x28c0;&#x28ef;&#x28b9;&#x2840;&#x2884;&#x287f;&#x2800;&#x28c9;&#x28fd;&#x28bf;&#x2803;&#x2820;&#x287e;&#x2806;&#x28a0;&#x28f7;&#x2804;&#x2830;&#x2877;&#x2800;&#x2818;&#x28ff;&#x287d;&#x28e7;&#x28c0;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2880;&#x2864;&#x2836;&#x2816;&#x280b;&#x28d0;&#x28f4;&#x281f;&#x2801;&#x2840;&#x2804;&#x2842;&#x2808;&#x28ff;&#x28ff;&#x2836;&#x2836;&#x28a6;&#x28cd;&#x2809;&#x2808;&#x2819;&#x281b;&#x2801;&#x2800;&#x28a0;&#x280f;&#x2800;&#x2800;&#x2880;&#x28c0;&#x28c0;&#x28c0;&#x28c0;&#x2840;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2818;&#x28c7;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x287e;&#x2837;&#x28b6;&#x284c;&#x2810;&#x2808;&#x2841;&#x2884;&#x28c2;&#x2870;&#x28b8;&#x287f;&#x28e6;&#x28ff;&#x28ff;&#x2880;&#x2810;&#x2840;&#x280c;&#x28e7;&#x2800;&#x2800;&#x2800;&#x2800;&#x2880;&#x28fe;&#x28f0;&#x2816;&#x281b;&#x2809;&#x2809;&#x2808;&#x28bb;&#x287f;&#x28fd;&#x2837;&#x28e6;&#x2840;&#x2800;&#x2800;&#x2800;&#x28b0;&#x28ff;&#x2846;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x28b4;&#x281b;&#x2809;&#x28b0;&#x285f;&#x28e7;&#x2800;&#x28f8;&#x285f;&#x28c7;&#x2888;&#x28f7;&#x28b9;&#x28ff;&#x28ff;&#x28a6;&#x28d4;&#x2840;&#x2882;&#x28ff;&#x2800;&#x2800;&#x2800;&#x2874;&#x288b;&#x28ff;&#x28ff;&#x2846;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28b7;&#x28fe;&#x28ff;&#x280b;&#x2801;&#x2800;&#x2800;&#x2800;&#x2800;&#x2819;&#x28fb;&#x2844;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2838;&#x28a6;&#x28e5;&#x287e;&#x2801;&#x283f;&#x28e4;&#x283c;&#x2807;&#x281b;&#x280b;&#x2800;&#x2800;&#x28ff;&#x28ff;&#x2800;&#x2808;&#x2809;&#x2809;&#x2801;&#x2800;&#x2800;&#x2818;&#x28b7;&#x285f;&#x282e;&#x28dd;&#x28c7;&#x2800;&#x2800;&#x2800;&#x2800;&#x2880;&#x28c0;&#x287f;&#x2801;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2838;&#x28ff;&#x28e7;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28b8;&#x284f;&#x2809;&#x2809;&#x2809;&#x2809;&#x2809;&#x2809;&#x2809;&#x2809;&#x2809;&#x2809;&#x28fb;&#x2800;&#x2800;&#x2800;&#x28b8;&#x2807;&#x2800;&#x2800;&#x283b;&#x2824;&#x2836;&#x2816;&#x281b;&#x2809;&#x2801;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2809;&#x28b9;&#x2840;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28b8;&#x2847;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28f9;&#x2800;&#x2800;&#x2800;&#x28b8;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2818;&#x2847;&#x2800;&#x2800;&#x2800;&#x2800;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2808;&#x2813;&#x28f6;&#x2836;&#x2836;&#x2836;&#x2836;&#x2836;&#x2836;&#x2836;&#x2836;&#x28f6;&#x281b;&#x2800;&#x2800;&#x2800;&#x28b8;&#x2844;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2898;&#x2847;&#x2800;&#x28f4;&#x28ff;&#x28e6;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28bb;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28a0;&#x2847;&#x2800;&#x2800;&#x2800;&#x2800;&#x2808;&#x28e7;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28f8;&#x28e4;&#x28fe;&#x28c5;&#x28e9;&#x280f;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28b8;&#x2847;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28f8;&#x2801;&#x2800;&#x2800;&#x2800;&#x2800;&#x28a0;&#x285e;&#x2833;&#x2866;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28e0;&#x2826;&#x28e4;&#x2840;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x28a0;&#x28ff;&#x28c7;&#x28fc;&#x283f;&#x280b;&#x2800;&#xa;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2813;&#x2812;&#x2812;&#x2816;&#x2832;&#x2812;&#x2812;&#x281b;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2800;&#x2819;&#x2813;&#x2812;&#x2812;&#x2812;&#x2812;&#x2812;&#x2826;&#x2836;&#x2834;&#x283f;&#x2836;&#x2836;&#x2834;&#x2816;&#x2812;&#x2812;&#x2812;&#x281a;&#x281b;&#x2809;&#x2801;&#x2800;&#x2800;&#x2800;&#x2800;"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                <LineBorder thickness="0"/>
+              </Border>
+            </Property>
+            <Property name="caretColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Default Cursor"/>
+            </Property>
+            <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="de" green="32" red="9d" type="rgb"/>
+            </Property>
+            <Property name="focusTraversalKeysEnabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="highlighter" type="javax.swing.text.Highlighter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="null"/>
+            </Property>
+            <Property name="selectionColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

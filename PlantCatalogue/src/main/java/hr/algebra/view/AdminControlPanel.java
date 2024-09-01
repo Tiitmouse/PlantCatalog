@@ -11,6 +11,7 @@ import hr.algebra.model.Plant;
 import hr.algebra.parsers.rss.PlantParser;
 import hr.algebra.utilities.MessageUtils;
 import hr.algebra.view.model.PlantsTableModel;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -52,6 +53,8 @@ public class AdminControlPanel extends javax.swing.JPanel {
         tblPlants = new javax.swing.JTable();
         btnDeleteSelected = new javax.swing.JButton();
         btnDeleteAllPlants = new javax.swing.JButton();
+        btnDeleteAllSupers = new javax.swing.JButton();
+        btnDeleteAllUsers = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -111,6 +114,24 @@ public class AdminControlPanel extends javax.swing.JPanel {
             }
         });
 
+        btnDeleteAllSupers.setBackground(new java.awt.Color(255, 204, 204));
+        btnDeleteAllSupers.setForeground(new java.awt.Color(0, 0, 0));
+        btnDeleteAllSupers.setText("DELETE ALL SUPERS");
+        btnDeleteAllSupers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteAllSupersActionPerformed(evt);
+            }
+        });
+
+        btnDeleteAllUsers.setBackground(new java.awt.Color(255, 204, 204));
+        btnDeleteAllUsers.setForeground(new java.awt.Color(0, 0, 0));
+        btnDeleteAllUsers.setText("DELETE ALL USERS");
+        btnDeleteAllUsers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteAllUsersActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -118,6 +139,10 @@ public class AdminControlPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(146, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnDeleteAllSupers, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(btnDeleteAllUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnUploadPlantsToDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -130,14 +155,18 @@ public class AdminControlPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(79, Short.MAX_VALUE)
+                .addContainerGap(44, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUploadPlantsToDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDeleteSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDeleteAllPlants, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDeleteAllSupers, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteAllUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -169,13 +198,10 @@ public class AdminControlPanel extends javax.swing.JPanel {
                     "Delete plant",
                     "u sure?")) {
                 try {
-                    // todo should delete its downloaded picture
-                    if (pl.get().getPicture_path() != null) {
-                        Files.deleteIfExists(Paths.get(pl.get().getPicture_path()));
-                    }
+                    deletepic(pl.get().getPicture_path());
                     context.plants.delete(selectedPlantId);
                     plantsTableModel.setPlants(context.plants.selectAll());
-                    
+                    MessageUtils.showInformationMessage("Success", "plant deleted");
                 } catch (Exception ex) {
                     Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                     MessageUtils.showErrorMessage("Error", "Unable to delete plant!");
@@ -193,12 +219,10 @@ public class AdminControlPanel extends javax.swing.JPanel {
                 "Delete all plants",
                 "u sure?")) {
             try {
-                 //todo should delete its downloaded picture
-                 //if (selectedPlant.getPicture_path()!= null) {
-                 //    Files.deleteIfExists(Paths.get(selectedPlant.getPicture_path()));
-                 // }
+                List<Plant> plants = context.plants.selectAll();
+                plants.forEach(p -> deletepic(p.getPicture_path()));
                 context.plants.deleteAll();
-
+                MessageUtils.showInformationMessage("Success", "deleted all plants \n bees must be happy");
             } catch (Exception ex) {
                 Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                 MessageUtils.showErrorMessage("Error", "Unable to delete all plants!");
@@ -218,9 +242,40 @@ public class AdminControlPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tblPlantsKeyPressed
 
+    private void btnDeleteAllSupersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllSupersActionPerformed
+        if (MessageUtils.showConfirmDialog(
+                "Delete all supers",
+                "u sure?")) {
+            try {
+                context.families.deleteAll();
+                context.conservations.deleteAll();
+                context.zones.deleteAll();
+                context.lights.deleteAll();
+                MessageUtils.showInformationMessage("Success", "deleted all supers");
+            } catch (Exception ex) {
+                Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                MessageUtils.showErrorMessage("Error", "Unable to delete all supers!");
+            }
+        }
+    }//GEN-LAST:event_btnDeleteAllSupersActionPerformed
+
+    private void btnDeleteAllUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllUsersActionPerformed
+        if (MessageUtils.showConfirmDialog(
+                "Delete all users",
+                "u sure?")) {
+            try {
+                context.users.deleteAll();
+                MessageUtils.showInformationMessage("Success", "deleted all users \n you are all alone :)");
+            } catch (Exception ex) {
+                Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                MessageUtils.showErrorMessage("Error", "Unable to delete all users!");
+            }}    }//GEN-LAST:event_btnDeleteAllUsersActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeleteAllPlants;
+    private javax.swing.JButton btnDeleteAllSupers;
+    private javax.swing.JButton btnDeleteAllUsers;
     private javax.swing.JButton btnDeleteSelected;
     private javax.swing.JButton btnUploadPlantsToDatabase;
     private javax.swing.JScrollPane jScrollPane2;
@@ -257,6 +312,16 @@ public class AdminControlPanel extends javax.swing.JPanel {
         tblPlants.setRowHeight(25);
         plantsTableModel = new PlantsTableModel(context.plants.selectAll());
         tblPlants.setModel(plantsTableModel);
+    }
+
+    private void deletepic(String picture_path) {
+        if (picture_path != null) {
+            try {
+                Files.deleteIfExists(Paths.get(picture_path));
+            } catch (IOException ex) {
+                Logger.getLogger(AdminControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

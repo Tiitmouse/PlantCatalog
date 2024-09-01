@@ -26,7 +26,7 @@ public class Test {
 
             
 
-            families.forEach(f -> System.out.println(f.getFamilyName()));
+            families.forEach(f -> System.out.println(f.getName()));
             plants.forEach(f -> System.out.println(f.toString()));
             users.forEach(f -> System.out.println(f.toString()));
 

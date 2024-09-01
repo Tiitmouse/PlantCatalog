@@ -4,17 +4,109 @@
  */
 package hr.algebra.view;
 
+import hr.algebra.dal.Context;
+import hr.algebra.dal.ContextFactory;
+import hr.algebra.model.Conservation;
+import hr.algebra.model.Family;
+import hr.algebra.model.Light;
+import hr.algebra.model.Super;
+import hr.algebra.model.Zone;
+import hr.algebra.utilities.MessageUtils;
+import hr.algebra.view.model.DropdownModel;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+
 /**
  *
  * @author lorena
  */
 public class EditSuperPanel extends javax.swing.JPanel {
 
+    private final Context context;
+
     /**
      * Creates new form EditSuperPanel
      */
     public EditSuperPanel() {
+        context = ContextFactory.getContext();
         initComponents();
+    }
+
+    private void fillDropdown(String supertype) {
+        switch (supertype) {
+            case "Family": {
+                try {
+                    var families = context.families.selectAll()
+                            .stream()
+                            .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                            .toList();
+                    var model = new DropdownModel(new ArrayList<Super>(families));
+                    cbCategories.setModel(model);
+                    setTOcreate();
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch families");
+                }
+            }
+            break;
+            case "Conservation": {
+                try {
+                    var conservations = context.conservations.selectAll()
+                            .stream()
+                            .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                            .toList();
+                    var model = new DropdownModel(new ArrayList<Super>(conservations));
+                    cbCategories.setModel(model);
+                    setTOcreate();
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch conservations");
+                }
+            }
+            break;
+            case "Zone": {
+                try {
+                    var zones = context.zones.selectAll()
+                            .stream()
+                            .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                            .toList();
+                    var model = new DropdownModel(new ArrayList<Super>(zones));
+                    cbCategories.setModel(model);
+                    setTOcreate();
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch zones");
+                }
+            }
+            break;
+            case "Light": {
+                try {
+                    var lights = context.lights.selectAll()
+                            .stream()
+                            .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
+                            .toList();
+                    var model = new DropdownModel(new ArrayList<Super>(lights));
+                    cbCategories.setModel(model);
+                    setTOcreate();
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch lights");
+                }
+            }
+            break;
+            case "Unselected": {
+                ArrayList<Super> list = new ArrayList<Super>();
+                list.add(new Family(""));
+                cbCategories.setModel(new DropdownModel(list));
+                clearTF();
+            }
+            break;
+
+            default:
+                throw new AssertionError();
+        }
     }
 
     /**
@@ -26,32 +118,54 @@ public class EditSuperPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnDoneEditing = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
         btnCanceEditing = new javax.swing.JButton();
-        btnDeletePlant = new javax.swing.JButton();
+        btnDeleteCategory = new javax.swing.JButton();
         cbSupers = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         cbCategories = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tfID = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        tfValue = new javax.swing.JTextField();
+        btnClearCategory = new javax.swing.JButton();
+        btnCreateNew = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        btnDoneEditing.setBackground(new java.awt.Color(137, 151, 116));
-        btnDoneEditing.setText("Done");
+        btnUpdate.setBackground(new java.awt.Color(137, 151, 116));
+        btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnCanceEditing.setBackground(new java.awt.Color(137, 151, 116));
         btnCanceEditing.setText("Cancel");
+        btnCanceEditing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCanceEditingActionPerformed(evt);
+            }
+        });
 
-        btnDeletePlant.setBackground(new java.awt.Color(255, 204, 204));
-        btnDeletePlant.setForeground(new java.awt.Color(0, 0, 0));
-        btnDeletePlant.setText("Delete");
+        btnDeleteCategory.setBackground(new java.awt.Color(255, 204, 204));
+        btnDeleteCategory.setForeground(new java.awt.Color(0, 0, 0));
+        btnDeleteCategory.setText("Delete");
+        btnDeleteCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteCategoryActionPerformed(evt);
+            }
+        });
 
         cbSupers.setBackground(new java.awt.Color(137, 151, 116));
-        cbSupers.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Family", "Conservation", "Zone", "Light" }));
+        cbSupers.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unselected", "Family", "Conservation", "Zone", "Light" }));
+        cbSupers.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbSupersItemStateChanged(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(137, 151, 116));
@@ -63,25 +177,44 @@ public class EditSuperPanel extends javax.swing.JPanel {
 
         cbCategories.setBackground(new java.awt.Color(137, 151, 116));
         cbCategories.setForeground(new java.awt.Color(255, 255, 255));
-        cbCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategories.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbCategoriesItemStateChanged(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(137, 151, 116));
         jLabel11.setText("Choose category");
 
-        jTextField1.setEditable(false);
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField1.setForeground(new java.awt.Color(137, 151, 116));
-        jTextField1.setText("0");
+        tfID.setEditable(false);
+        tfID.setBackground(new java.awt.Color(255, 255, 255));
+        tfID.setForeground(new java.awt.Color(137, 151, 116));
+        tfID.setText("0");
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(137, 151, 116));
         jLabel1.setText("Value");
 
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField2.setForeground(new java.awt.Color(137, 151, 116));
-        jTextField2.setText("jTextField2");
-        jTextField2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 2, true));
+        tfValue.setBackground(new java.awt.Color(255, 255, 255));
+        tfValue.setForeground(new java.awt.Color(137, 151, 116));
+        tfValue.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(137, 151, 116), 2, true));
+
+        btnClearCategory.setBackground(new java.awt.Color(137, 151, 116));
+        btnClearCategory.setText("clear");
+        btnClearCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearCategoryActionPerformed(evt);
+            }
+        });
+
+        btnCreateNew.setBackground(new java.awt.Color(137, 151, 116));
+        btnCreateNew.setText("Create new");
+        btnCreateNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateNewActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -96,66 +229,315 @@ public class EditSuperPanel extends javax.swing.JPanel {
                             .addComponent(jLabel11))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnClearCategory))
                             .addComponent(cbSupers, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel1)
                             .addGap(18, 18, 18)
-                            .addComponent(jTextField2))
+                            .addComponent(tfValue))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                                .addComponent(btnCanceEditing))
-                            .addGap(42, 42, 42)
-                            .addComponent(btnDoneEditing)
-                            .addGap(34, 34, 34)
-                            .addComponent(btnDeletePlant))))
+                            .addComponent(btnCanceEditing)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnUpdate)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnCreateNew)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnDeleteCategory))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addGap(18, 18, 18)
+                            .addComponent(tfID, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(328, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(60, Short.MAX_VALUE)
+                .addContainerGap(27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(cbSupers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(cbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClearCategory))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfID, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCanceEditing)
-                    .addComponent(btnDoneEditing)
-                    .addComponent(btnDeletePlant))
-                .addContainerGap(314, Short.MAX_VALUE))
+                    .addComponent(btnUpdate)
+                    .addComponent(btnDeleteCategory)
+                    .addComponent(btnCreateNew))
+                .addContainerGap(347, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cbSupersItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbSupersItemStateChanged
+        String type = (String) cbSupers.getSelectedItem();
+        fillDropdown(type);
+    }//GEN-LAST:event_cbSupersItemStateChanged
+
+    private void cbCategoriesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCategoriesItemStateChanged
+        Super c = (Super) cbCategories.getSelectedItem();
+        setSelecteCategory(c);
+    }//GEN-LAST:event_cbCategoriesItemStateChanged
+
+    private void btnDeleteCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteCategoryActionPerformed
+        int id = Integer.parseInt(tfID.getText());
+
+        if (id == 0) {
+            return;
+        }
+        String type = (String) cbSupers.getSelectedItem();
+        switch (type) {
+            case "Family": {
+                try {
+                    context.families.delete(id);
+                    setTOcreate();
+                    MessageUtils.showInformationMessage("Success", "svaka cast");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch families");
+                }
+            }
+            break;
+            case "Conservation": {
+                try {
+                    context.conservations.delete(id);
+                    setTOcreate();
+                    MessageUtils.showInformationMessage("Success", "svaka cast");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch conservations");
+                }
+            }
+            break;
+            case "Zone": {
+                try {
+                    context.zones.delete(id);
+                    setTOcreate();
+                    MessageUtils.showInformationMessage("Success", "svaka cast");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch zones");
+                }
+            }
+            break;
+            case "Light": {
+                try {
+                    context.lights.delete(id);
+                    setTOcreate();
+                    MessageUtils.showInformationMessage("Success", "svaka cast");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to fetch lights");
+                }
+            }
+            break;
+            case "Unselected": {
+                ArrayList<Super> list = new ArrayList<Super>();
+                list.add(new Family(""));
+                cbCategories.setModel(new DropdownModel(list));
+                clearTF();
+            }
+            break;
+
+            default:
+                throw new AssertionError();
+        }
+    }//GEN-LAST:event_btnDeleteCategoryActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        int id = Integer.parseInt(tfID.getText());
+        String newValue = tfValue.getText();
+
+        if (id == 0) {
+            MessageUtils.showErrorMessage("Error", "Select a category to update");
+            return;
+        }
+
+        String type = (String) cbSupers.getSelectedItem();
+        switch (type) {
+            case "Family": {
+                try {
+                    Family f = new Family(id, newValue);
+                    context.families.update(id, f);
+                    MessageUtils.showInformationMessage("Success", "updated");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            case "Conservation": {
+                try {
+                    Conservation c = new Conservation(id, newValue);
+                    context.conservations.update(id, c);
+                    MessageUtils.showInformationMessage("Success", "updated");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            case "Zone": {
+                try {
+                    Zone z = new Zone(id, newValue);
+                    context.zones.update(id, z);
+                    MessageUtils.showInformationMessage("Success", "updated");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            case "Light": {
+                try {
+                    Light l = new Light(id, newValue);
+                    context.lights.update(id, l);
+                    MessageUtils.showInformationMessage("Success", "updated");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            default:
+                throw new AssertionError();
+        }
+
+        clear();
+
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnCanceEditingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanceEditingActionPerformed
+        try {
+            Super c = (Super) cbCategories.getSelectedItem();
+            setSelecteCategory(c);
+        } catch (Exception e) {
+            setSelecteCategory(new Super(0, "Type a new category"));
+        }
+
+    }//GEN-LAST:event_btnCanceEditingActionPerformed
+
+    private void btnClearCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearCategoryActionPerformed
+        clear();
+    }//GEN-LAST:event_btnClearCategoryActionPerformed
+
+    private void btnCreateNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewActionPerformed
+        int id = Integer.parseInt(tfID.getText());
+        String newValue = tfValue.getText();
+        int s = cbSupers.getSelectedIndex();
+
+        if (s == 0) {
+            MessageUtils.showErrorMessage("Error", "Please choose super");
+            return;
+        }
+
+        if (id != 0) {
+            MessageUtils.showErrorMessage("Error", "A category with this id already exists");
+            return;
+        }
+
+        String type = (String) cbSupers.getSelectedItem();
+        switch (type) {
+            case "Family": {
+                try {
+                    Family f = new Family(newValue);
+                    context.families.create(f);
+                    MessageUtils.showInformationMessage("Success", "created");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            case "Conservation": {
+                try {
+                    Conservation c = new Conservation(newValue);
+                    context.conservations.create(c);
+                    MessageUtils.showInformationMessage("Success", "created");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            case "Zone": {
+                try {
+                    Zone z = new Zone(newValue);
+                    context.zones.create(z);
+                    MessageUtils.showInformationMessage("Success", "created");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            case "Light": {
+                try {
+                    Light l = new Light(newValue);
+                    context.lights.create(l);
+                    MessageUtils.showInformationMessage("Success", "created");
+                } catch (Exception ex) {
+                    Logger.getLogger(EditSuperPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    MessageUtils.showErrorMessage("Error", "Unable to update");
+                }
+            }
+            break;
+            default:
+                throw new AssertionError();
+        }
+
+        clear();    }//GEN-LAST:event_btnCreateNewActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCanceEditing;
-    private javax.swing.JButton btnDeletePlant;
-    private javax.swing.JButton btnDoneEditing;
-    private javax.swing.JComboBox<String> cbCategories;
+    private javax.swing.JButton btnClearCategory;
+    private javax.swing.JButton btnCreateNew;
+    private javax.swing.JButton btnDeleteCategory;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<Super> cbCategories;
     private javax.swing.JComboBox<String> cbSupers;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField tfID;
+    private javax.swing.JTextField tfValue;
     // End of variables declaration//GEN-END:variables
+
+    private void setSelecteCategory(Super c) {
+        tfID.setText(String.valueOf(c.getId()));
+        tfValue.setText(c.getName());
+    }
+
+    private void clearTF() {
+        tfID.setText("0");
+        tfValue.setText("");
+    }
+
+    private void setTOcreate() {
+        tfID.setText("0");
+        tfValue.setText("Type a new category");
+    }
+
+    private void clear() {
+        var i = cbSupers.getSelectedIndex();
+        cbSupers.setSelectedIndex(0);
+        cbSupers.setSelectedIndex(i);
+    }
+
 }

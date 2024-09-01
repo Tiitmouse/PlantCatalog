@@ -79,16 +79,34 @@ public class PlantParser {
                                 }
                                 case FAMILY -> {
                                     if (!data.isEmpty()) {
-                                        try {
+
+                                            var fam = context.families.selectAll().stream()
+                                                    .filter(f -> f.getName().equals(data))
+                                                    .findFirst()
+                                                    .orElse(null);
+
+                                            if (fam != null) {
+                                                plant.setFamily(fam);
+                                                break;
+                                            }
+
                                             var id = context.families.create(new Family(data));
                                             plant.setFamily(new Family(id, data));
-                                        } catch (Exception e) {
-                                            System.out.println(e);
-                                        }
                                     }
                                 }
                                 case CONSERVATION -> {
                                     if (!data.isEmpty()) {
+
+                                       var cons = context.conservations.selectAll().stream()
+                                                    .filter(f -> f.getName().equals(data))
+                                                    .findFirst()
+                                                    .orElse(null);
+
+                                            if (cons != null) {
+                                                plant.setConservation_status(cons);
+                                                break;
+                                            }
+
                                         var id = context.conservations.create(new Conservation(data));
                                         plant.setConservation_status(new Conservation(id, data));
                                     }
@@ -107,12 +125,34 @@ public class PlantParser {
                                 }
                                 case LIGHT -> {
                                     if (!data.isEmpty()) {
+                                        
+                                        var lig = context.lights.selectAll().stream()
+                                                    .filter(f -> f.getName().equals(data))
+                                                    .findFirst()
+                                                    .orElse(null);
+
+                                            if (lig != null) {
+                                                plant.setLight(lig);
+                                                break;
+                                            }
+                                        
                                         var id = context.lights.create(new Light(data));
                                         plant.setLight(new Light(id, data));
                                     }
                                 }
                                 case ZONE -> {
                                     if (!data.isEmpty()) {
+                                        
+                                        var zon = context.zones.selectAll().stream()
+                                                    .filter(f -> f.getName().equals(data))
+                                                    .findFirst()
+                                                    .orElse(null);
+
+                                            if (zon != null) {
+                                                plant.setZone(zon);
+                                                break;
+                                            }
+                                        
                                         var id = context.zones.create(new Zone(data));
                                         plant.setZone(new Zone(id, data));
                                     }
