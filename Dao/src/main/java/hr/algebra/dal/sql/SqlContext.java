@@ -2,12 +2,12 @@ package hr.algebra.dal.sql;
 
 
 import hr.algebra.dal.Context;
-import hr.algebra.dal.Entities.ConservationRepo;
-import hr.algebra.dal.Entities.FamilyRepo;
-import hr.algebra.dal.Entities.LightRepo;
-import hr.algebra.dal.Entities.PlantRepo;
-import hr.algebra.dal.Entities.ZoneRepo;
-import hr.algebra.dal.Entities.UserRepo;
+import hr.algebra.dal.Repositories.ConservationRepo;
+import hr.algebra.dal.Repositories.FamilyRepo;
+import hr.algebra.dal.Repositories.LightRepo;
+import hr.algebra.dal.Repositories.PlantRepo;
+import hr.algebra.dal.Repositories.ZoneRepo;
+import hr.algebra.dal.Repositories.UserRepo;
 
 
 /**

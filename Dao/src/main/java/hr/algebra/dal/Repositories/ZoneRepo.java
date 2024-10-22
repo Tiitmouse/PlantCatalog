@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hr.algebra.dal.Entities;
+package hr.algebra.dal.Repositories;
 
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.sql.DataSourceSingleton;

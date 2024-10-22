@@ -19,11 +19,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
@@ -43,7 +41,7 @@ public class PlantParser {
         List<Plant> plants = new ArrayList<>();
         var context = ContextFactory.getContext();
         HttpURLConnection con = UrlConnectionFactory.getHttpUrlConnection(RSS_URL);
-        try (InputStream is = con.getInputStream()) { // stream will close the connection
+        try (InputStream is = con.getInputStream()) {
             XMLEventReader reader = ParserFactory.createStaxParser(is);
 
             Optional<TagType> tagType = Optional.empty();
@@ -178,11 +176,8 @@ public class PlantParser {
     }
 
     private static void handlePicture(Plant plant, String pictureUrl) {
-        // if picture is not ok, we must continue!!!
         try {
             if (pictureUrl.isBlank()) {
-                //TODO set to no picture
-                //California Poppy
                 plant.setPicture_path("assets/noPicture.jpg");
                 return;
             }
@@ -194,7 +189,6 @@ public class PlantParser {
             String localPicturePath = DIR + File.separator + pictureName;
 
             FileUtils.copyFromUrl(pictureUrl, localPicturePath);
-            // put breakpoint
             plant.setPicture_path(localPicturePath);
         } catch (Exception ex) {
             Logger.getLogger(PlantParser.class.getName()).log(Level.SEVERE, null, ex);

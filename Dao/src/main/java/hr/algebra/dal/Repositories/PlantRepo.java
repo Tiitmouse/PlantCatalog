@@ -1,4 +1,4 @@
-package hr.algebra.dal.Entities;
+package hr.algebra.dal.Repositories;
 
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.sql.DataSourceSingleton;
